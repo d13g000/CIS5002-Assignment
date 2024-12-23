@@ -12,7 +12,7 @@ Task 1a (MSA) handles running multiple sequence alignment on the donwloaded FAST
 2. Combined FASTA file is aligned using Clutal Omega and MAFFT as saved in seperate files where:
    Gaps (-) are inserted into the sequence where residues cannot be aligned
    Residues from the sequence of each species are aligned below one another with:
-      * indicating a fully conserved position (exact match across all sequences)\n
-      : indicating a conserved position (similar but not identical residues across sequences)\n
+      * indicating a fully conserved position (exact match across all sequences)
+      : indicating a conserved position (similar but not identical residues across sequences)
       . indicating a weakly conserved position (residues are somewhat similar but not highly conserved)
 3. Alignment summary is generated including alignment score (%age sequence similarity) for each tool 
