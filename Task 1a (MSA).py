@@ -56,7 +56,7 @@ def summarize_alignment(file_path):
         file_path (str): Path to Clustal Omega / MAFFT file.
 
     Returns:
-        Edited and summarised Clustal Omega / MAFFT file.
+        (str): Edited and summarised Clustal Omega / MAFFT file.
     """
     file_format = "clustal" if "clustal" in file_path else "fasta" #
     # Determines format of alignment file
@@ -91,7 +91,7 @@ def calculate_alignment_score(alignment):
         aligned sequences.
 
     Returns:
-        Alignment score.
+        (str): Alignment score.
     """
     alignment_length = alignment.get_alignment_length() # Retrieves length of
     # alignment (total number of positions in each sequence of the alignment)
