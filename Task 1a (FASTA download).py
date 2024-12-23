@@ -35,7 +35,8 @@ def fetch_protein_id(protein_name, species_name):
                 # UniProt ID (if results exist)
         # Error handling
         else:
-            print(f"Failed to fetch protein ID for {protein_name} in {species_name}.")
+            print(f"Failed to fetch protein ID for {protein_name} in "
+                  f"{species_name}.")
             print("Response:", response.text) # Prints error and server
             # response - UniProt website errors
     except Exception as e: # Prevents programme crashing and terminating due to
