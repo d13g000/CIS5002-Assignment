@@ -98,7 +98,7 @@ def download_protein_for_species(protein_name, species_list, output_folder,
         if protein_id:  # If a valid UniProt ID is found
             output_file = os.path.join(output_folder,
             f"{species.replace(' ', '_')}_{protein_id}.{format}")  # Creates
-            # the output file path, replacing spaces in the species name with
+            # the output file path and replaces spaces in the species name with
             # underscores
             download_protein_sequence(protein_id, output_file, format=format)
             # Downloads and saves the protein sequence (Calls
@@ -131,10 +131,11 @@ def summarise_alignment(file_path):
         # function)
         print(f"  Alignment score (percent identical positions): "
               f" {alignment_score:.2f}%")
-        print(f"  Sequences:") # Prints the first 50 characters of each sequence
+        print(f"  Sequences:")
         for record in alignment:
             print(f"    {record.id}: {record.seq[:50]}"
-                  f"{'...' if len(record.seq) > 50 else ''}")
+                  f"{'...' if len(record.seq) > 50 else ''}") # Prints the
+            # first 50 characters of each sequence
     except Exception as e: # Handles errors in reading the alignment file
         print(f"Failed to parse alignment file {file_path}. Error: {e}")
 
@@ -159,9 +160,9 @@ def calculate_alignment_score(alignment):
         residues_at_position = [record.seq[i] for record in alignment]
         # Collects all residues at this position
         if (len(set(residues_at_position)) == 1 and '-' not in
-                residues_at_position):    # Checks if all residues are
+                residues_at_position): # Checks if all residues are
             # identical and there are no gaps
-            identical_positions += 1  # Increments the counter for identical
+            identical_positions += 1 # Increments the counter for identical
             # positions
 
     return (identical_positions / alignment_length) * 100  # Calculates the
@@ -169,7 +170,7 @@ def calculate_alignment_score(alignment):
 
 # Main section of the script
 if __name__ == "__main__":
-    # Step 1: Defines inputs for the script
+    # Step 1: Defining inputs for the script
     protein_name = "Heme oxygenase 1"  # Name of protein
     species_list = ["Bos taurus", "Homo sapiens",
                     "Sus scrofa", "Rattus norvegicus", "Gallus gallus",
@@ -177,12 +178,12 @@ if __name__ == "__main__":
     output_folder = "protein_sequences"  # Folder to save downloaded sequences
     sequence_format = "fasta"  # Sequence format
 
-    # Step 2: Downloads protein sequences
+    # Step 2: Downloading protein sequences
     download_protein_for_species(protein_name, species_list, output_folder,
                                  format=sequence_format) # Calls
     # download_protein_for_species function
 
-    # Step 3: Combines all downloaded sequences into a single file
+    # Step 3: Combining all downloaded sequences into a single file
     msa_output_folder = "msa_protein_sequences"  # Folder for alignment outputs
     os.makedirs(msa_output_folder, exist_ok=True)  # Creates folder if it
     # does not exist
@@ -200,7 +201,7 @@ if __name__ == "__main__":
                 #  combined file
     print(f"Combined all FASTA files into {combined_fasta}.")
 
-    # Step 4: Performs alignment using Clustal Omega
+    # Step 4: Performing multiple sequence alignment using Clustal Omega
     clustal_output = os.path.join(msa_output_folder, "combined_clustal.aln")
     # Path for Clustal output
     subprocess.run([
@@ -211,7 +212,7 @@ if __name__ == "__main__":
         "--force"  # Overwrites existing file if necessary
     ])
 
-    # Step 5: Performs alignment using MAFFT
+    # Step 5: Performing multiple sequence alignment using MAFFT
     mafft_output = os.path.join(msa_output_folder, "combined_mafft.aln")
     # Path for MAFFT output
     with open(mafft_output, 'w') as mafft_out:  # Opens output file in write
@@ -219,7 +220,7 @@ if __name__ == "__main__":
         subprocess.run(["mafft", combined_fasta], stdout=mafft_out)
         # Runs MAFFT and redirects output to file
 
-    # Step 6: Summarises alignment results
+    # Step 6: Summarising alignment results
     summarise_alignment(clustal_output)  # Summarises Clustal Omega results
     # (Calls summarise_alignment function)
     summarise_alignment(mafft_output)  # Summarises MAFFT results (Calls
