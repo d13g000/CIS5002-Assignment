@@ -16,3 +16,10 @@ Task 1a (MSA) handles running multiple sequence alignment on the donwloaded FAST
        : indicating a conserved position (similar but not identical residues across sequences)
        . indicating a weakly conserved position (residues are somewhat similar but not highly conserved)
 3. Alignment summary is generated including alignment score (%age sequence similarity) for each tool 
+
+Task 1a combines both of the above scripts therefore automating the process of downloading protein sequences from UniProt and performing multiple sequence alignment (MSA) using Clustal Omega and MAFFT. In order to run MSA the follwing dependencies are required:
+   - Biopython (bash: pip install biopython)
+   - Clustal Omega and MAFFT (bash Linux: sudo apt-get install clustalo mafft / bash MacOS: brew install clustalo mafft)
+When run this returns:
+   A protein_sequences folder containing the protein sequences of Heme oxygenase 1 for each of the 6 different species specified. 
+   An msa_protein_sequences folder containing the combined and aligned sequences
