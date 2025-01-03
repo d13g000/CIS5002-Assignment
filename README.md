@@ -1,25 +1,87 @@
 # CIS5002-Assignment
 CIS5002 Assignment question explanation
 
-Task 1a (FASTA download) handles fetching and downloading Heme oxygenase 1 protein sequences for a list of different species
-1. For each species the script queries UniProt for the specific protein ID
-2. If a matching UniProt ID is found, the corresponding protein ID is downloaded in FASTA format
-3. The sequence is saved to a file named after the species and its corresponding UniProt ID
+Task 1a automates the process of downloading protein sequences for a specified protein ("Heme oxygenase 1") from UniProt for various species, performs multiple sequence alignment (MSA) using both Clustal Omega and MAFFT, and generates a summary of the alignment results. 
 
-Task 1a (MSA) handles running multiple sequence alignment on the donwloaded FASTA files using Clustal Omega and MAFFT 
-(Assumes Clustal Omega, MAFFT and, Biopython are installed)
-1. Previously downloaded FASTA files are combined to generate a new combined FASTA file
-2. Combined FASTA file is aligned using Clutal Omega and MAFFT as saved in seperate files where:
-   - Clustal Omega and MAFFT output files have gaps (-) inserted into the sequence where residues cannot be aligned
-   - The Clustal Omega output file ONLY has residues from the sequence of each species aligned below one another with:
-       * indicating a fully conserved position (exact match across all sequences)
-       : indicating a conserved position (similar but not identical residues across sequences)
-       . indicating a weakly conserved position (residues are somewhat similar but not highly conserved)
-3. Alignment summary is generated including alignment score (%age sequence similarity) for each tool 
+--> How the Script Works:
+1. Fetching Protein ID from UniProt:
+ - The script starts by querying the UniProt database for the specific protein (e.g., Heme oxygenase 1) in a given species. It constructs a query to search for the UniProt ID (primary accession) of the protein within that species using the UniProt API.
+2, Downloading Protein Sequences:
+ - Once a valid UniProt ID is retrieved for a species, the script sends a request to the UniProt API to download the corresponding protein sequence in FASTA format.
+ - The downloaded sequence is saved to a specified file.
+3. Downloading Protein Sequences for Multiple Species:
+ - The script loops through a list of species names and fetches their respective protein sequences.
+ - For each species, it calls the function to fetch the UniProt ID and then downloads the protein sequence, saving each one in a separate file.
+4. Combining All Sequences:
+ - After all protein sequences are downloaded, the script combines them into a single FASTA file.
+ - This combined file will be used for multiple sequence alignment.
+5. Multiple Sequence Alignment (MSA):
+ - Using Clustal Omega and MAFFT, the script performs multiple sequence alignment on the combined FASTA file. Clustal Omega and MAFFT are external programs that align the sequences and save the aligned results in respective files.
+6. Summarizing Alignment Results:
+ - After performing the MSA, the script summarises the alignment results for both Clustal Omega and MAFFT. The summary includes:
+      > Number of sequences in the alignment.
+      > Length of the alignment.
+      > Percentage of identical positions (alignment score).
+      > A preview of the first 50 characters of each sequence.
+7. Calculating Alignment Score:
+ - A simple alignment score is calculated based on the percentage of identical positions across all sequences in the alignment.
 
-Task 1a combines both of the above scripts therefore automating the process of downloading protein sequences from UniProt and performing multiple sequence alignment (MSA) using Clustal Omega and MAFFT. In order to run MSA the follwing dependencies are required:
-   - Biopython (bash: pip install biopython)
-   - Clustal Omega and MAFFT (bash Linux: sudo apt-get install clustalo mafft / bash MacOS: brew install clustalo mafft)
-When run this returns:
-   A protein_sequences folder containing the protein sequences of Heme oxygenase 1 for each of the 6 different species specified. 
-   An msa_protein_sequences folder containing the combined and aligned sequences
+--> Input Files and Folder Structure:
+For the script to work, the following files and folders must be within the same directory where the script is saved:
+ - protein_sequences Folder:
+Contains the protein sequences of "Heme oxygenase 1" for each species in FASTA format.
+(This folder will be created if it does not already exist to save the individual FASTA files for each species.)
+ - msa_protein_sequences Folder:
+Contains the combined and aligned sequences from Clustal Omega and MAFFT.
+(This folder will store the results of the multiple sequence alignments.)
+
+--> Required Dependencies:
+To ensure the script runs successfully, the following dependencies must be installed:
+ - Biopython: For sequence parsing, handling FASTA files, and working with sequence alignments.
+      Installed using the command: pip install biopython.
+ - Clustal Omega and MAFFT: These tools are used for performing multiple sequence alignment.
+      Installed using the following commands: (Linux: sudo apt-get install clustalo mafft / MacOS: brew install clustalo mafft)
+ - Requests: This Python library is used to interact with the UniProt API and fetch data from the web.
+      Installed using the command: pip install requests.
+
+--> Final Output:
+ - Protein Sequences: Downloaded FASTA files containing the protein sequences of "Heme oxygenase 1" for each species.
+ - Combined Alignment: A combined FASTA file containing sequences from all species.
+ - Alignment Results: Aligned sequences generated by Clustal Omega and MAFFT, stored in .aln format, and summarized with an alignment score.
+
+---
+
+Task 2b handles extracting the sequence of a gene (HFE) from a genome reference file using annotation data provided in a GTF file. It automates the process of extracting exons associated with the HFE gene and concatenating them into a single DNA sequence. This is done by parsing the GTF file to identify the locations of the exons and extracting the corresponding sequences from the genome in FASTA format. The extracted sequence is then saved to a new FASTA file for further analysis or use.
+
+--> How the Script Works:
+1. Parsing the GTF File:
+ - The script reads the provided GTF annotation file and searches for exons associated with the specified gene ID (GeneID:3077, corresponding to the HFE gene).
+ - It extracts the relevant information (chromosome, start and end positions, strand) for each exon, and stores these details in a list.
+2. Extracting Exon Sequences:
+ - The genome file (in FASTA format) is loaded, and sequences corresponding to the exons identified in the GTF file are extracted.
+ - If the exon is on the reverse strand, the sequence is reverse complemented to ensure the correct sequence is retrieved.
+3. Saving the Sequence:
+ - The extracted exon sequences are concatenated into one complete sequence representing the gene.
+ - This sequence is then saved to a FASTA file with the name HFE_gene_sequence.fasta.
+
+--> Input Files:
+ - Annotations File (GTF Format):
+The annotation file is expected to be in GTF format, which provides gene and exon location information.
+The data can be downloaded from the following link: (https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001405.40/)
+ - Genome File (FASTA Format):
+The genome file containing the reference genome sequence for the species (in FASTA format) is required to extract the corresponding exon sequences for the HFE gene.
+
+--> File and Folder Structure:
+For the script to work, the following files and folders must be present in the same directory where the script is saved:
+ - Reference Files Folder (reference_sequence_and_annotation/):
+ - annotations.gtf: The GTF file containing annotation data for the genome.
+ - genome.fasta: The FASTA file containing the reference genome sequence.
+The script will extract the gene sequence and save it in a file named HFE_gene_sequence.fasta in the same directory.
+
+--> Required Dependencies:
+For the script to work, the following dependencies must be installed:
+ - Biopython:
+      Installed using the command: pip install biopython.
+
+--> Final Output:
+ - HFE Sequence: FASTA file containing HFE gene sequence extracted from reference genome file using coordinates gathered from annotations file
