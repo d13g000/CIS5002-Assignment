@@ -16,12 +16,12 @@ species = {
 
 # Create main directory for all files (all files/folders downloaded/generated
 # will be saved within this folder)
-main_dir = "Task_1a"
+main_dir = "Task 1"
 os.makedirs(main_dir, exist_ok=True)
 
 # Subdirectory for storing downloaded sequences (files for sequences from
 # different species will be saved within this folder)
-sequences_dir = os.path.join(main_dir, "Species Sequences")
+sequences_dir = os.path.join(main_dir, "species sequences")
 os.makedirs(sequences_dir, exist_ok=True)
 
 # Download sequences from UniProt (uses species dictionary to download
