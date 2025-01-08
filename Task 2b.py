@@ -9,7 +9,7 @@ task_2b_dir = os.path.join(script_dir, "Task 2")
 # File names within the Task_2b folder
 REFERENCE_GENOME_FILE = os.path.join(task_2b_dir, "Reference genome.fna")
 ANNOTATION_FILE = os.path.join(task_2b_dir, "Annotations.gtf")
-OUTPUT_FILE = os.path.join(task_2b_dir, "HFE_gene_sequence.fasta")
+OUTPUT_FILE = os.path.join(task_2b_dir, "HFE_gene.fasta")
 
 # GeneID for the HFE gene
 HFE_GENE_ID = "3077"
