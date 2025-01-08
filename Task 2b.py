@@ -4,7 +4,7 @@ from Bio.Seq import Seq
 
 # Define the directory and file paths
 script_dir = os.path.dirname(os.path.abspath(__file__))
-task_2b_dir = os.path.join(script_dir, "Task_2b")
+task_2b_dir = os.path.join(script_dir, "Task 2")
 
 # File names within the Task_2b folder
 REFERENCE_GENOME_FILE = os.path.join(task_2b_dir, "Reference genome.fna")
