@@ -7,7 +7,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 task_2b_dir = os.path.join(script_dir, "Task 2")
 REFERENCE_GENOME_FILE = os.path.join(task_2b_dir, "Reference genome.fna")
 ANNOTATION_FILE = os.path.join(task_2b_dir, "Annotations.gtf")
-HFE_GENE_SEQUENCE_FILE = os.path.join(task_2b_dir, "HFE_gene_sequence.fasta")
+HFE_GENE_SEQUENCE_FILE = os.path.join(task_2b_dir, "HFE_gene.fasta")
 OUTPUT_DIR = os.path.join(task_2b_dir, "mRNA_variants")
 
 # Ensure the output directory exists
@@ -93,8 +93,8 @@ def extract_exon_sequences(reference_file, chrom, exons, strand):
     with open(reference_file, "r") as f:
         for record in SeqIO.parse(f, "fasta"):
             if record.id == chrom:
-                # Concatenate exon sequences
-                sequence = "".join([str(record.seq[start - 1:end]) for start, end in sorted(exons)])
+                # Concatenate exon sequences and filter out lowercase letters
+                sequence = "".join([str(record.seq[start - 1:end]).upper() for start, end in sorted(exons)])
                 # Return reverse complement if on negative strand
                 return str(Seq(sequence).reverse_complement()) if strand == "-" else sequence
     raise ValueError(f"Chromosome {chrom} not found in the reference genome.")
