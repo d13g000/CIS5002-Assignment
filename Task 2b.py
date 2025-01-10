@@ -11,20 +11,24 @@ REFERENCE_GENOME_FILE = os.path.join(task_2b_dir, "Reference genome.fna")
 ANNOTATION_FILE = os.path.join(task_2b_dir, "Annotations.gtf")
 OUTPUT_FILE = os.path.join(task_2b_dir, "HFE_gene.fasta")
 
-# GeneID for the HFE gene
+# GeneID and Protein ID for the HFE gene
 HFE_GENE_ID = "3077"
+HFE_PROTEIN_ID = "NP_000401.1"
 
-def extract_hfe_genomic_location(gtf_file, gene_id):
+
+def extract_genomic_location(gtf_file, gene_id, protein_id):
     """
-    Extract the genomic location of the HFE gene from the GTF file.
+    Extract the genomic location of the HFE gene using both gene ID and protein ID from the GTF file.
 
     Args:
         gtf_file (str): Path to the GTF file.
         gene_id (str): GeneID of the HFE gene.
+        protein_id (str): Protein ID of the HFE gene.
 
     Returns:
         dict: A dictionary containing chromosome, start, end, and strand of the gene.
     """
+    gene_location = None
     with open(gtf_file, "r") as f:
         for line in f:
             if line.startswith("#"):
@@ -34,14 +38,31 @@ def extract_hfe_genomic_location(gtf_file, gene_id):
                 continue
 
             attributes = fields[8]
+
+            # Check for gene ID in "gene" entries
             if f"GeneID:{gene_id}" in attributes and fields[2] == "gene":
                 chrom = fields[0]
                 start = int(fields[3])
                 end = int(fields[4])
                 strand = fields[6]
-                return {"chrom": chrom, "start": start, "end": end, "strand": strand}
+                gene_location = {"chrom": chrom, "start": start, "end": end,
+                                 "strand": strand}
 
-    raise ValueError(f"GeneID {gene_id} not found in the GTF file.")
+            # Cross-check with protein ID in "CDS" entries
+            if gene_location and f"protein_id \"{protein_id}\"" in attributes and \
+                    fields[2] == "CDS":
+                if fields[0] == gene_location["chrom"] and fields[6] == \
+                        gene_location["strand"]:
+                    cds_start = int(fields[3])
+                    cds_end = int(fields[4])
+                    gene_location["start"] = min(gene_location["start"],
+                                                 cds_start)
+                    gene_location["end"] = max(gene_location["end"], cds_end)
+                    return gene_location
+
+    raise ValueError(
+        f"GeneID {gene_id} or Protein ID {protein_id} not found or do not match in the GTF file.")
+
 
 def extract_sequence(reference_file, chrom, start, end, strand):
     """
@@ -55,25 +76,25 @@ def extract_sequence(reference_file, chrom, start, end, strand):
         strand (str): Strand information ('+' or '-').
 
     Returns:
-        str: The extracted sequence with lowercase letters removed.
+        str: The extracted sequence (including lowercase letters).
     """
     with open(reference_file, "r") as f:
         for record in SeqIO.parse(f, "fasta"):
             if record.id == chrom:
-                sequence = record.seq[start - 1 : end]  # Convert to 0-based indexing
-                filtered_sequence = "".join(
-                    [char for char in str(sequence) if char.isupper()])
+                sequence = record.seq[start - 1:end]  # Convert to 0-based indexing
                 if strand == "-":
-                    return str(Seq(filtered_sequence).reverse_complement())
+                    return str(sequence.reverse_complement())
                 else:
-                    return filtered_sequence
+                    return str(sequence)
 
     raise ValueError(f"Chromosome {chrom} not found in the reference genome.")
+
 
 def main():
     try:
         # Step 1: Extract genomic location of the HFE gene
-        gene_location = extract_hfe_genomic_location(ANNOTATION_FILE, HFE_GENE_ID)
+        gene_location = extract_genomic_location(ANNOTATION_FILE, HFE_GENE_ID,
+                                                 HFE_PROTEIN_ID)
         print(f"Genomic location of HFE gene: {gene_location}")
 
         # Step 2: Extract the sequence from the reference genome
@@ -87,13 +108,15 @@ def main():
 
         # Step 3: Write the sequence to a FASTA file
         with open(OUTPUT_FILE, "w") as f:
-            f.write(f">HFE_gene|GeneID:{HFE_GENE_ID}|{gene_location['chrom']}:{gene_location['start']}-{gene_location['end']}({gene_location['strand']})\n")
+            f.write(
+                f">HFE_gene|GeneID:{HFE_GENE_ID}|ProteinID:{HFE_PROTEIN_ID}|{gene_location['chrom']}:{gene_location['start']}-{gene_location['end']}({gene_location['strand']})\n")
             f.write(hfe_sequence + "\n")
 
         print(f"HFE gene sequence saved to {OUTPUT_FILE}")
 
     except Exception as e:
         print(f"Error: {e}")
+
 
 if __name__ == "__main__":
     main()
