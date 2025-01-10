@@ -5,6 +5,7 @@ from Bio.Seq import Seq
 def translate_mrna(mrna_sequence):
     """
     Translates the entire mRNA sequence into protein sequences in all three reading frames.
+    This ensures only uppercase letters are considered for translation.
 
     Args:
         mrna_sequence (str): The mRNA sequence.
@@ -12,6 +13,9 @@ def translate_mrna(mrna_sequence):
     Returns:
         dict: A dictionary with frame numbers (1, 2, 3) and the corresponding protein sequences.
     """
+    # Filter to only keep uppercase letters (valid mRNA nucleotides)
+    mrna_sequence = ''.join([base for base in mrna_sequence if base.isupper()])
+
     protein_sequences = {}
 
     for frame in range(3):
@@ -19,8 +23,7 @@ def translate_mrna(mrna_sequence):
         frame_sequence = mrna_sequence[frame:]
 
         # Translate the sequence
-        protein_sequence = Seq(
-            frame_sequence).translate()  # Translate the whole sequence including stop codons
+        protein_sequence = Seq(frame_sequence).translate()  # Translate the whole sequence including stop codons
         protein_sequences[frame + 1] = str(protein_sequence)
 
     return protein_sequences
@@ -40,7 +43,6 @@ def find_orfs(protein_sequences):
     longest_frame = -1
 
     for frame, protein_sequence in protein_sequences.items():
-
         # Identify the longest ORF
         if len(protein_sequence) > len(longest_orf):
             longest_orf = protein_sequence
