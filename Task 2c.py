@@ -8,7 +8,7 @@ task_2b_dir = os.path.join(script_dir, "Task 2")
 REFERENCE_GENOME_FILE = os.path.join(task_2b_dir, "Reference genome.fna")
 ANNOTATION_FILE = os.path.join(task_2b_dir, "Annotations.gtf")
 HFE_GENE_SEQUENCE_FILE = os.path.join(task_2b_dir, "HFE_gene.fasta")
-OUTPUT_DIR = os.path.join(task_2b_dir, "mRNA_variants")
+OUTPUT_DIR = os.path.join(task_2b_dir, "HFE_mrna_variants")
 
 # Ensure the output directory exists
 os.makedirs(OUTPUT_DIR, exist_ok=True)
