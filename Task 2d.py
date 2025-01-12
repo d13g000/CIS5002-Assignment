@@ -1,11 +1,47 @@
 import os
-from Bio.Seq import Seq
 
+# Genetic Code Table for Translation
+GENETIC_CODE = {
+    'UUU': 'F', 'UUC': 'F', 'UUA': 'L', 'UUG': 'L',
+    'UCU': 'S', 'UCC': 'S', 'UCA': 'S', 'UCG': 'S',
+    'UAU': 'Y', 'UAC': 'Y', 'UAA': '*', 'UAG': '*',
+    'UGU': 'C', 'UGC': 'C', 'UGA': '*', 'UGG': 'W',
+    'CUU': 'L', 'CUC': 'L', 'CUA': 'L', 'CUG': 'L',
+    'CCU': 'P', 'CCC': 'P', 'CCA': 'P', 'CCG': 'P',
+    'CAU': 'H', 'CAC': 'H', 'CAA': 'Q', 'CAG': 'Q',
+    'CGU': 'R', 'CGC': 'R', 'CGA': 'R', 'CGG': 'R',
+    'AUU': 'I', 'AUC': 'I', 'AUA': 'I', 'AUG': 'M',
+    'ACU': 'T', 'ACC': 'T', 'ACA': 'T', 'ACG': 'T',
+    'AAU': 'N', 'AAC': 'N', 'AAA': 'K', 'AAG': 'K',
+    'AGU': 'S', 'AGC': 'S', 'AGA': 'R', 'AGG': 'R',
+    'GUU': 'V', 'GUC': 'V', 'GUA': 'V', 'GUG': 'V',
+    'GCU': 'A', 'GCC': 'A', 'GCA': 'A', 'GCG': 'A',
+    'GAU': 'D', 'GAC': 'D', 'GAA': 'E', 'GAG': 'E',
+    'GGU': 'G', 'GGC': 'G', 'GGA': 'G', 'GGG': 'G',
+}
+
+def translate_sequence(sequence):
+    """
+    Translates an mRNA sequence into a protein sequence.
+    Stop codons (*) are included in the translation.
+
+    Args:
+        sequence (str): The mRNA sequence.
+
+    Returns:
+        str: The translated protein sequence.
+    """
+    protein = []
+    for i in range(0, len(sequence) - 2, 3):  # Process in codons (triplets)
+        codon = sequence[i:i+3]
+        amino_acid = GENETIC_CODE.get(codon, '')
+        if amino_acid:  # Skip invalid codons
+            protein.append(amino_acid)
+    return ''.join(protein)
 
 def translate_mrna(mrna_sequence):
     """
     Translates the entire mRNA sequence into protein sequences in all three reading frames.
-    This ensures only uppercase letters are considered for translation.
 
     Args:
         mrna_sequence (str): The mRNA sequence.
@@ -21,13 +57,11 @@ def translate_mrna(mrna_sequence):
     for frame in range(3):
         # Extract the sequence for the current reading frame
         frame_sequence = mrna_sequence[frame:]
-
         # Translate the sequence
-        protein_sequence = Seq(frame_sequence).translate()  # Translate the whole sequence including stop codons
-        protein_sequences[frame + 1] = str(protein_sequence)
+        protein_sequence = translate_sequence(frame_sequence)
+        protein_sequences[frame + 1] = protein_sequence
 
     return protein_sequences
-
 
 def find_orfs(protein_sequences):
     """
@@ -50,7 +84,6 @@ def find_orfs(protein_sequences):
 
     return longest_orf, longest_frame
 
-
 def translate_mrna_to_orf(mrna_file, output_folder):
     """
     Translates the mRNA sequence in all three frames and finds the correct ORF.
@@ -64,8 +97,7 @@ def translate_mrna_to_orf(mrna_file, output_folder):
         with open(mrna_file, "r") as f:
             lines = f.readlines()
             header = lines[0].strip()  # FASTA header
-            mrna_sequence = "".join(
-                line.strip() for line in lines[1:])  # Join mRNA sequence lines
+            mrna_sequence = "".join(line.strip() for line in lines[1:])  # Join mRNA sequence lines
 
         # Translate mRNA to protein sequences in all frames
         protein_sequences = translate_mrna(mrna_sequence)
@@ -78,8 +110,7 @@ def translate_mrna_to_orf(mrna_file, output_folder):
 
         # Write the protein sequences for each frame to separate FASTA files
         for frame, protein_sequence in protein_sequences.items():
-            output_file = os.path.join(output_folder,
-                                       f"HFE_protein_frame_{frame}.fasta")
+            output_file = os.path.join(output_folder, f"HFE_protein_frame_{frame}.fasta")
             with open(output_file, "w") as f:
                 f.write(f"{header} (ORF: Frame {longest_frame})\n")
                 f.write(protein_sequence + "\n")
@@ -91,7 +122,6 @@ def translate_mrna_to_orf(mrna_file, output_folder):
     except Exception as e:
         print(f"Error in translation: {e}")
 
-
 def main():
     # Define paths
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -101,7 +131,6 @@ def main():
 
     # Translate mRNA to find the ORF and output the sequences
     translate_mrna_to_orf(mrna_file, output_folder)
-
 
 if __name__ == "__main__":
     main()
