@@ -1,6 +1,4 @@
 import os
-from Bio import SeqIO
-from Bio.Seq import Seq
 
 # Define file paths dynamically
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -12,6 +10,32 @@ OUTPUT_DIR = os.path.join(task_2b_dir, "HFE_mrna_variants")
 
 # Ensure the output directory exists
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+def parse_fasta(file_path):
+    """
+    Parse a FASTA file into a dictionary mapping sequence IDs to sequences.
+
+    Args:
+        file_path (str): Path to the FASTA file.
+
+    Returns:
+        dict: A dictionary where keys are sequence IDs and values are sequences.
+    """
+    sequences = {}
+    with open(file_path, "r") as f:
+        current_id = None
+        current_seq = []
+        for line in f:
+            if line.startswith(">"):
+                if current_id is not None:
+                    sequences[current_id] = "".join(current_seq)
+                current_id = line[1:].strip().split()[0]
+                current_seq = []
+            else:
+                current_seq.append(line.strip())
+        if current_id is not None:
+            sequences[current_id] = "".join(current_seq)
+    return sequences
 
 def transcribe_dna_to_mrna(dna_sequence_file, output_mrna_file):
     """
@@ -26,17 +50,15 @@ def transcribe_dna_to_mrna(dna_sequence_file, output_mrna_file):
         with open(dna_sequence_file, "r") as f:
             lines = f.readlines()
             header = lines[0].strip()  # FASTA header
-            dna_sequence = "".join(
-                line.strip() for line in lines[1:])  # Join DNA sequence lines
+            dna_sequence = "".join(line.strip() for line in lines[1:])  # Join DNA sequence lines
 
-        # Transcribe DNA to mRNA
-        dna_seq = Seq(dna_sequence)
-        mrna_sequence = dna_seq.transcribe()
+        # Transcribe DNA to mRNA (replace T with U)
+        mrna_sequence = dna_sequence.replace("T", "U").replace("t", "u")
 
         # Write the mRNA sequence to the output file
         with open(output_mrna_file, "w") as f:
             f.write(f"{header}\n")  # Reuse the FASTA header
-            f.write(str(mrna_sequence) + "\n")
+            f.write(mrna_sequence + "\n")
 
         print(f"mRNA sequence saved to {output_mrna_file}")
 
@@ -90,14 +112,14 @@ def extract_exon_sequences(reference_file, chrom, exons, strand):
     Returns:
         str: The combined mRNA sequence.
     """
-    with open(reference_file, "r") as f:
-        for record in SeqIO.parse(f, "fasta"):
-            if record.id == chrom:
-                # Concatenate exon sequences and filter out lowercase letters
-                sequence = "".join([str(record.seq[start - 1:end]).upper() for start, end in sorted(exons)])
-                # Return reverse complement if on negative strand
-                return str(Seq(sequence).reverse_complement()) if strand == "-" else sequence
-    raise ValueError(f"Chromosome {chrom} not found in the reference genome.")
+    sequences = parse_fasta(reference_file)
+    if chrom not in sequences:
+        raise ValueError(f"Chromosome {chrom} not found in the reference genome.")
+    sequence = "".join(sequences[chrom][start - 1:end].upper() for start, end in sorted(exons))
+    if strand == "-":
+        complement = str.maketrans("ACGTacgt", "UGCAugca")
+        return sequence.translate(complement)[::-1]  # Reverse complement for negative strand
+    return sequence
 
 def main():
     # Define the GeneID for which to extract mRNA variants
