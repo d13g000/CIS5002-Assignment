@@ -63,6 +63,28 @@ def translate_mrna(mrna_sequence):
 
     return protein_sequences
 
+def find_orf_sequence(protein_sequence):
+    """
+    Extracts the ORF from a given protein sequence.
+    The ORF starts with 'M' (methionine) and ends at the first '*' (stop codon).
+    This version excludes the stop codon.
+
+    Args:
+        protein_sequence (str): The full protein sequence.
+
+    Returns:
+        str: The ORF sequence (from 'M' to the first codon before '*').
+    """
+    start_index = protein_sequence.find('M')
+    if start_index == -1:
+        return ""  # No start codon found
+
+    stop_index = protein_sequence.find('*', start_index)
+    if stop_index == -1:
+        return protein_sequence[start_index:]  # No stop codon found, return from start to the end
+
+    return protein_sequence[start_index:stop_index]  # Exclude the stop codon
+
 def find_orfs(protein_sequences):
     """
     Outputs the ORF for each reading frame and finds the correct ORF, based on the longest protein sequence.
@@ -77,9 +99,11 @@ def find_orfs(protein_sequences):
     longest_frame = -1
 
     for frame, protein_sequence in protein_sequences.items():
+        # Extract the ORF from the protein sequence
+        orf = find_orf_sequence(protein_sequence)
         # Identify the longest ORF
-        if len(protein_sequence) > len(longest_orf):
-            longest_orf = protein_sequence
+        if len(orf) > len(longest_orf):
+            longest_orf = orf
             longest_frame = frame
 
     return longest_orf, longest_frame
@@ -105,6 +129,10 @@ def translate_mrna_to_orf(mrna_file, output_folder):
         # Find the valid ORF
         longest_orf, longest_frame = find_orfs(protein_sequences)
 
+        # Print the longest ORF and its frame
+        print(f"The ORF is found in Frame {longest_frame}")
+        print(f"ORF Protein Sequence:\n{longest_orf}")
+
         # Create output folder if it doesn't exist
         os.makedirs(output_folder, exist_ok=True)
 
@@ -116,8 +144,12 @@ def translate_mrna_to_orf(mrna_file, output_folder):
                 f.write(protein_sequence + "\n")
             print(f"Protein sequence for Frame {frame} saved to {output_file}")
 
-        # Print the frame that contains the ORF (longest protein sequence)
-        print(f"The ORF is found in Frame {longest_frame}")
+        # Save the longest ORF to a separate file
+        orf_output_file = os.path.join(output_folder, "HFE_ORF_sequence.fasta")
+        with open(orf_output_file, "w") as f:
+            f.write(f"{header} (ORF Sequence)\n")
+            f.write(longest_orf + "\n")
+        print(f"ORF sequence saved to {orf_output_file}")
 
     except Exception as e:
         print(f"Error in translation: {e}")
