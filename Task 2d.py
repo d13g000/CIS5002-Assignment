@@ -138,7 +138,9 @@ def translate_mrna_to_orf(mrna_file, output_folder):
 
         # Write the protein sequences for each frame to separate FASTA files
         for frame, protein_sequence in protein_sequences.items():
-            output_file = os.path.join(output_folder, f"HFE_protein_frame_{frame}.fasta")
+            output_file = os.path.join(output_folder,
+                                       f"HFE_protein_reading_frame"
+                                       f"_{frame}.fasta")
             with open(output_file, "w") as f:
                 f.write(f"{header} (ORF: Frame {longest_frame})\n")
                 f.write(protein_sequence + "\n")
@@ -159,7 +161,7 @@ def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     task_2b_dir = os.path.join(script_dir, "Task 2")
     mrna_file = os.path.join(task_2b_dir, "HFE_mrna.fasta")
-    output_folder = os.path.join(task_2b_dir, "HFE_protein_frames")
+    output_folder = os.path.join(task_2b_dir, "HFE_protein_reading_frames")
 
     # Translate mRNA to find the ORF and output the sequences
     translate_mrna_to_orf(mrna_file, output_folder)
