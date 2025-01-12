@@ -1,6 +1,4 @@
 import os
-from Bio import SeqIO
-from Bio.Seq import Seq
 
 # Define the directory and file paths
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -49,19 +47,44 @@ def extract_genomic_location(gtf_file, gene_id, protein_id):
                                  "strand": strand}
 
             # Cross-check with protein ID in "CDS" entries
-            if gene_location and f"protein_id \"{protein_id}\"" in attributes and \
-                    fields[2] == "CDS":
-                if fields[0] == gene_location["chrom"] and fields[6] == \
-                        gene_location["strand"]:
+            if gene_location and f'protein_id "{protein_id}"' in attributes and fields[2] == "CDS":
+                if fields[0] == gene_location["chrom"] and fields[6] == gene_location["strand"]:
                     cds_start = int(fields[3])
                     cds_end = int(fields[4])
-                    gene_location["start"] = min(gene_location["start"],
-                                                 cds_start)
+                    gene_location["start"] = min(gene_location["start"], cds_start)
                     gene_location["end"] = max(gene_location["end"], cds_end)
                     return gene_location
 
     raise ValueError(
-        f"GeneID {gene_id} or Protein ID {protein_id} not found or do not match in the GTF file.")
+        f"GeneID {gene_id} or Protein ID {protein_id} not found or do not match in the GTF file."
+    )
+
+
+def parse_fasta(file_path):
+    """
+    Parse a FASTA file into a dictionary mapping sequence IDs to sequences.
+
+    Args:
+        file_path (str): Path to the FASTA file.
+
+    Returns:
+        dict: A dictionary where keys are sequence IDs and values are sequences.
+    """
+    sequences = {}
+    with open(file_path, "r") as f:
+        current_id = None
+        current_seq = []
+        for line in f:
+            if line.startswith(">"):
+                if current_id is not None:
+                    sequences[current_id] = "".join(current_seq)
+                current_id = line[1:].strip().split()[0]
+                current_seq = []
+            else:
+                current_seq.append(line.strip())
+        if current_id is not None:
+            sequences[current_id] = "".join(current_seq)
+    return sequences
 
 
 def extract_sequence(reference_file, chrom, start, end, strand):
@@ -78,23 +101,20 @@ def extract_sequence(reference_file, chrom, start, end, strand):
     Returns:
         str: The extracted sequence (including lowercase letters).
     """
-    with open(reference_file, "r") as f:
-        for record in SeqIO.parse(f, "fasta"):
-            if record.id == chrom:
-                sequence = record.seq[start - 1:end]  # Convert to 0-based indexing
-                if strand == "-":
-                    return str(sequence.reverse_complement())
-                else:
-                    return str(sequence)
-
-    raise ValueError(f"Chromosome {chrom} not found in the reference genome.")
+    sequences = parse_fasta(reference_file)
+    if chrom not in sequences:
+        raise ValueError(f"Chromosome {chrom} not found in the reference genome.")
+    sequence = sequences[chrom][start - 1:end]  # Convert to 0-based indexing
+    if strand == "-":
+        complement = str.maketrans("ACGTacgt", "TGCAtgca")
+        return sequence.translate(complement)[::-1]
+    return sequence
 
 
 def main():
     try:
         # Step 1: Extract genomic location of the HFE gene
-        gene_location = extract_genomic_location(ANNOTATION_FILE, HFE_GENE_ID,
-                                                 HFE_PROTEIN_ID)
+        gene_location = extract_genomic_location(ANNOTATION_FILE, HFE_GENE_ID, HFE_PROTEIN_ID)
         print(f"Genomic location of HFE gene: {gene_location}")
 
         # Step 2: Extract the sequence from the reference genome
@@ -103,13 +123,14 @@ def main():
             gene_location["chrom"],
             gene_location["start"],
             gene_location["end"],
-            gene_location["strand"]
+            gene_location["strand"],
         )
 
         # Step 3: Write the sequence to a FASTA file
         with open(OUTPUT_FILE, "w") as f:
             f.write(
-                f">HFE_gene|GeneID:{HFE_GENE_ID}|ProteinID:{HFE_PROTEIN_ID}|{gene_location['chrom']}:{gene_location['start']}-{gene_location['end']}({gene_location['strand']})\n")
+                f">HFE_gene|GeneID:{HFE_GENE_ID}|ProteinID:{HFE_PROTEIN_ID}|{gene_location['chrom']}:{gene_location['start']}-{gene_location['end']}({gene_location['strand']})\n"
+            )
             f.write(hfe_sequence + "\n")
 
         print(f"HFE gene sequence saved to {OUTPUT_FILE}")
