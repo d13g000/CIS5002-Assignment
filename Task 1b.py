@@ -6,7 +6,7 @@ import sqlparse  # For proper SQL parsing
 db_config = {
     "host": "localhost",
     "user": "root",
-    "password": "Diegito16599!",
+    "password": "password",
     "database": "gene_ontology"
 }
 
