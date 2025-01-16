@@ -143,7 +143,7 @@ def main():
             output_file = os.path.join(OUTPUT_DIR, f"{transcript_id}_mRNA.fasta")
             with open(output_file, "w") as f:
                 f.write(f">{transcript_id}|GeneID:{gene_id}|{chrom}|{strand}\n")
-                f.write(mrna_sequence + "\n")
+                f.write(mrna_sequence.strip() + "\n")
 
             print(f"Saved mRNA sequence for transcript {transcript_id} to {output_file}")
 
