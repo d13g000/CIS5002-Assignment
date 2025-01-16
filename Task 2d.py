@@ -32,39 +32,24 @@ def translate_sequence(sequence):
     """
     protein = []
     for i in range(0, len(sequence) - 2, 3):  # Process in codons (triplets)
-        codon = sequence[i:i+3]
+        codon = sequence[i:i + 3]
         amino_acid = GENETIC_CODE.get(codon, '')
         if amino_acid:  # Skip invalid codons
             protein.append(amino_acid)
     return ''.join(protein)
 
-def translate_mrna(mrna_sequence):
+def reverse_complement(sequence):
     """
-    Translates the mRNA sequence in all six reading frames (3 forward and 3 reverse).
+    Computes the reverse complement of an RNA sequence.
 
     Args:
-        mrna_sequence (str): The mRNA sequence.
+        sequence (str): The RNA sequence.
 
     Returns:
-        dict: A dictionary with frame numbers (1-6) and the corresponding protein sequences.
+        str: The reverse complement RNA sequence.
     """
-    # Filter to only keep uppercase letters (valid mRNA nucleotides)
-    mrna_sequence = ''.join([base for base in mrna_sequence if base.isupper()])
-
-    protein_sequences = {}
-
-    # Forward frames (1, 2, 3)
-    for frame in range(3):
-        frame_sequence = mrna_sequence[frame:]
-        protein_sequences[frame + 1] = translate_sequence(frame_sequence)
-
-    # Reverse frames (4, 5, 6)
-    reversed_sequence = mrna_sequence[::-1]
-    for frame in range(3):
-        frame_sequence = reversed_sequence[frame:]
-        protein_sequences[frame + 4] = translate_sequence(frame_sequence)
-
-    return protein_sequences
+    complement = str.maketrans("AUCG", "UAGC")
+    return sequence.translate(complement)[::-1]
 
 def find_orf_sequence(protein_sequence):
     """
@@ -109,6 +94,31 @@ def find_orfs(protein_sequences):
 
     return longest_orf, longest_frame
 
+def translate_mrna(mrna_sequence):
+    """
+    Translates the mRNA sequence in all six reading frames.
+
+    Args:
+        mrna_sequence (str): The mRNA sequence.
+
+    Returns:
+        dict: A dictionary with frame numbers (1-6) and the corresponding protein sequences.
+    """
+    protein_sequences = {}
+
+    # Forward frames (1, 2, 3)
+    for frame in range(3):
+        frame_sequence = mrna_sequence[frame:]
+        protein_sequences[frame + 1] = translate_sequence(frame_sequence)
+
+    # Reverse complement frames (4, 5, 6)
+    reverse_comp_sequence = reverse_complement(mrna_sequence)
+    for frame in range(3):
+        frame_sequence = reverse_comp_sequence[frame:]
+        protein_sequences[frame + 4] = translate_sequence(frame_sequence)
+
+    return protein_sequences
+
 def translate_mrna_to_orf(mrna_file, output_folder):
     """
     Translates the mRNA sequence in all six frames and finds the correct ORF.
@@ -132,7 +142,7 @@ def translate_mrna_to_orf(mrna_file, output_folder):
 
         # Print the longest ORF and its frame
         print(f"The ORF is found in Frame {longest_frame}")
-        print(f"ORF Protein Sequence ({len(longest_orf)} aa):\n{longest_orf}")
+        print(f"ORF Protein Sequence ({len(longest_orf)} aa): {longest_orf}")
 
         # Create output folder if it doesn't exist
         os.makedirs(output_folder, exist_ok=True)
@@ -159,7 +169,7 @@ def main():
     # Define paths
     script_dir = os.path.dirname(os.path.abspath(__file__))
     task_2b_dir = os.path.join(script_dir, "Task 2")
-    mrna_file = os.path.join(task_2b_dir, "HFE_mrna.fasta")
+    mrna_file = os.path.join(task_2b_dir, "HFE_gene_mrna.fasta")
     output_folder = os.path.join(task_2b_dir, "HFE_protein_reading_frames")
 
     # Translate mRNA to find the ORF and output the sequences
