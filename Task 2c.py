@@ -37,33 +37,17 @@ def parse_fasta(file_path):
             sequences[current_id] = "".join(current_seq)
     return sequences
 
-def transcribe_dna_to_mrna(dna_sequence_file, output_mrna_file):
+def transcribe_to_mrna(dna_sequence):
     """
-    Transcribes a DNA sequence into mRNA and saves it to a file.
+    Transcribe a DNA sequence to mRNA by replacing T/t with U/u.
 
     Args:
-        dna_sequence_file (str): Path to the input FASTA file containing the DNA sequence.
-        output_mrna_file (str): Path to the output file to save the mRNA sequence.
+        dna_sequence (str): Input DNA sequence.
+
+    Returns:
+        str: Transcribed mRNA sequence.
     """
-    try:
-        # Read the DNA sequence from the FASTA file
-        with open(dna_sequence_file, "r") as f:
-            lines = f.readlines()
-            header = lines[0].strip()  # FASTA header
-            dna_sequence = "".join(line.strip() for line in lines[1:])  # Join DNA sequence lines
-
-        # Transcribe DNA to mRNA (replace T with U)
-        mrna_sequence = dna_sequence.replace("T", "U").replace("t", "u")
-
-        # Write the mRNA sequence to the output file
-        with open(output_mrna_file, "w") as f:
-            f.write(f"{header}\n")  # Reuse the FASTA header
-            f.write(mrna_sequence + "\n")
-
-        print(f"mRNA sequence saved to {output_mrna_file}")
-
-    except Exception as e:
-        print(f"Error in transcription: {e}")
+    return dna_sequence.replace("T", "U").replace("t", "u")
 
 def parse_gtf_for_transcripts(gtf_file, gene_id):
     """
@@ -118,17 +102,33 @@ def extract_exon_sequences(reference_file, chrom, exons, strand):
     sequence = "".join(sequences[chrom][start - 1:end].upper() for start, end in sorted(exons))
     if strand == "-":
         complement = str.maketrans("ACGTacgt", "UGCAugca")
-        return sequence.translate(complement)[::-1]  # Reverse complement for negative strand
+        sequence = sequence.translate(complement)[::-1]  # Reverse complement for negative strand
     return sequence
+
+def convert_hfe_gene_to_mrna(hfe_gene_file, output_file):
+    """
+    Convert the HFE gene sequence file into an mRNA file.
+
+    Args:
+        hfe_gene_file (str): Path to the HFE gene DNA sequence file.
+        output_file (str): Path to save the mRNA sequence.
+    """
+    sequences = parse_fasta(hfe_gene_file)
+    for seq_id, dna_sequence in sequences.items():
+        mrna_sequence = transcribe_to_mrna(dna_sequence)
+        with open(output_file, "w") as f:
+            f.write(f">{seq_id}\n")
+            f.write(mrna_sequence + "\n")
+    print(f"Converted HFE gene sequence to mRNA and saved to {output_file}")
 
 def main():
     # Define the GeneID for which to extract mRNA variants
     gene_id = "3077"  # HFE GeneID
 
     try:
-        # Step 1: Transcribe DNA to mRNA (using HFE gene sequence)
-        output_mrna_file = os.path.join(task_2b_dir, "HFE_mrna.fasta")
-        transcribe_dna_to_mrna(HFE_GENE_SEQUENCE_FILE, output_mrna_file)
+        # Step 1: Convert the HFE gene sequence file into mRNA
+        hfe_mrna_file = os.path.join(task_2b_dir, "HFE_gene_mRNA.fasta")
+        convert_hfe_gene_to_mrna(HFE_GENE_SEQUENCE_FILE, hfe_mrna_file)
 
         # Step 2: Parse the GTF file to get transcript variants
         transcripts = parse_gtf_for_transcripts(ANNOTATION_FILE, gene_id)
@@ -137,9 +137,12 @@ def main():
         # Step 3: Extract sequences for each transcript and save to files
         for transcript_id, data in transcripts.items():
             chrom, strand, exons = data["chrom"], data["strand"], data["exons"]
-            mrna_sequence = extract_exon_sequences(REFERENCE_GENOME_FILE, chrom, exons, strand)
+            dna_sequence = extract_exon_sequences(REFERENCE_GENOME_FILE, chrom, exons, strand)
 
-            # Write each transcript's mRNA to a separate FASTA file
+            # Transcribe DNA to mRNA
+            mrna_sequence = transcribe_to_mrna(dna_sequence)
+
+            # Save the mRNA sequence to a FASTA file
             output_file = os.path.join(OUTPUT_DIR, f"{transcript_id}_mRNA.fasta")
             with open(output_file, "w") as f:
                 f.write(f">{transcript_id}|GeneID:{gene_id}|{chrom}|{strand}\n")
