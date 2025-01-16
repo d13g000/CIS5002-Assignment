@@ -9,24 +9,23 @@ REFERENCE_GENOME_FILE = os.path.join(task_2b_dir, "Reference genome.fna")
 ANNOTATION_FILE = os.path.join(task_2b_dir, "Annotations.gtf")
 OUTPUT_FILE = os.path.join(task_2b_dir, "HFE_gene.fasta")
 
-# GeneID and Protein ID for the HFE gene
+# GeneID and Transcript ID for the HFE gene
 HFE_GENE_ID = "3077"
-HFE_PROTEIN_ID = "NP_000401.1"
+HFE_TRANSCRIPT_ID = "NM_000410.4"
 
 
-def extract_genomic_location(gtf_file, gene_id, protein_id):
+def extract_genomic_location(gtf_file, gene_id, transcript_id):
     """
-    Extract the genomic location of the HFE gene using both gene ID and protein ID from the GTF file.
+    Extract the genomic location of the HFE gene using both Gene ID and Transcript ID from the GTF file.
 
     Args:
         gtf_file (str): Path to the GTF file.
         gene_id (str): GeneID of the HFE gene.
-        protein_id (str): Protein ID of the HFE gene.
+        transcript_id (str): Transcript ID of the HFE gene.
 
     Returns:
         dict: A dictionary containing chromosome, start, end, and strand of the gene.
     """
-    gene_location = None
     with open(gtf_file, "r") as f:
         for line in f:
             if line.startswith("#"):
@@ -37,26 +36,16 @@ def extract_genomic_location(gtf_file, gene_id, protein_id):
 
             attributes = fields[8]
 
-            # Check for gene ID in "gene" entries
-            if f"GeneID:{gene_id}" in attributes and fields[2] == "gene":
+            # Filter for the specific Gene ID and Transcript ID
+            if f"GeneID:{gene_id}" in attributes and f'transcript_id "{transcript_id}"' in attributes:
                 chrom = fields[0]
                 start = int(fields[3])
                 end = int(fields[4])
                 strand = fields[6]
-                gene_location = {"chrom": chrom, "start": start, "end": end,
-                                 "strand": strand}
-
-            # Cross-check with protein ID in "CDS" entries
-            if gene_location and f'protein_id "{protein_id}"' in attributes and fields[2] == "CDS":
-                if fields[0] == gene_location["chrom"] and fields[6] == gene_location["strand"]:
-                    cds_start = int(fields[3])
-                    cds_end = int(fields[4])
-                    gene_location["start"] = min(gene_location["start"], cds_start)
-                    gene_location["end"] = max(gene_location["end"], cds_end)
-                    return gene_location
+                return {"chrom": chrom, "start": start, "end": end, "strand": strand}
 
     raise ValueError(
-        f"GeneID {gene_id} or Protein ID {protein_id} not found or do not match in the GTF file."
+        f"GeneID {gene_id} or Transcript ID {transcript_id} not found in the GTF file."
     )
 
 
@@ -114,7 +103,9 @@ def extract_sequence(reference_file, chrom, start, end, strand):
 def main():
     try:
         # Step 1: Extract genomic location of the HFE gene
-        gene_location = extract_genomic_location(ANNOTATION_FILE, HFE_GENE_ID, HFE_PROTEIN_ID)
+        gene_location = extract_genomic_location(
+            ANNOTATION_FILE, HFE_GENE_ID, HFE_TRANSCRIPT_ID
+        )
         print(f"Genomic location of HFE gene: {gene_location}")
 
         # Step 2: Extract the sequence from the reference genome
@@ -129,9 +120,9 @@ def main():
         # Step 3: Write the sequence to a FASTA file
         with open(OUTPUT_FILE, "w") as f:
             f.write(
-                f">HFE_gene|GeneID:{HFE_GENE_ID}|ProteinID:{HFE_PROTEIN_ID}|{gene_location['chrom']}:{gene_location['start']}-{gene_location['end']}({gene_location['strand']})\n"
+                f">HFE_gene|GeneID:{HFE_GENE_ID}|TranscriptID:{HFE_TRANSCRIPT_ID}|{gene_location['chrom']}:{gene_location['start']}-{gene_location['end']}({gene_location['strand']})\n"
             )
-            f.write(hfe_sequence + "\n")
+            f.write(hfe_sequence.strip() + "\n")
 
         print(f"HFE gene sequence saved to {OUTPUT_FILE}")
 
