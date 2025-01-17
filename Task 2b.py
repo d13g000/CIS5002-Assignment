@@ -12,7 +12,7 @@ reference_genome_file = os.path.join(task_2_dir, "Reference genome.fna")
 # File path for "Reference genome"
 annotations_file = os.path.join(task_2_dir, "Annotations.gtf") # File path
 # for "Annotations"
-output = os.path.join(task_2_dir, "HFE_gene.fasta") # Output file path
+output = os.path.join(task_2_dir, "2b_HFE_gene.fasta") # Output file path
 # and name
 
 # Define GeneID and TranscriptID
