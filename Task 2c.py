@@ -161,7 +161,6 @@ def extract_exon_sequences(reference_file, chrom, exons, strand):
 
 
 def main():
-
     try:
         # Step 1: Transcribes DNA gene sequence into mRNA
         hfe_mrna_file = os.path.join(task_2_dir, "2c_HFE_gene_mRNA.fasta")
