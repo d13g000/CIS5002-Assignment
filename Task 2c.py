@@ -14,6 +14,8 @@ output = os.path.join(task_2_dir, "2c_HFE_mRNA_variants") # Output file path
 # Ensure output directory exists
 os.makedirs(output, exist_ok=True) # Create output directory if non-existent
 
+# Define GeneID
+gene_id = "3077"  # GeneID for HFE
 
 def parse_fasta(file_path):
     """
@@ -159,8 +161,6 @@ def extract_exon_sequences(reference_file, chrom, exons, strand):
 
 
 def main():
-    # Define GeneID for which to extract mRNA variants
-    gene_id = "3077"  # GeneID for HFE
 
     try:
         # Step 1: Transcribes DNA gene sequence into mRNA
