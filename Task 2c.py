@@ -14,6 +14,7 @@ output = os.path.join(task_2_dir, "2c_HFE_mrna_variants") # Output file path
 # Ensure output directory exists
 os.makedirs(output, exist_ok=True) # Create output directory if non-existent
 
+
 def parse_fasta(file_path):
     """
     Parses FASTA file into dictionary mapping sequence IDs to sequences.
@@ -41,6 +42,7 @@ def parse_fasta(file_path):
             sequences[current_id] = "".join(current_seq)
     return sequences
 
+
 def transcribe_to_mrna(dna_sequence):
     """
     Transcribes DNA sequence to mRNA by replacing T/t with U/u.
@@ -53,6 +55,31 @@ def transcribe_to_mrna(dna_sequence):
     """
     return dna_sequence.replace("T", "U").replace("t", "u") # Replace thymine
     # (T/t) with uracil (U/u)
+
+
+def convert_gene_to_mrna(hfe_gene_file, output_file):
+    """
+    Converts "2b_HFE_gene.fasta" file into mRNA file ("2c_HFE_mrna_variants").
+
+    Args:
+        hfe_gene_file (str): Path to HFE gene DNA sequence file (
+        "2b_HFE_gene.fasta").
+        output_file (str): Output file path to save mRNA sequence (
+        "2c_HFE_mrna_variants").
+    """
+    sequences = parse_fasta(hfe_gene_file) # Parse gene sequence file (Call
+    # parse_fasta function)
+    for seq_id, dna_sequence in sequences.items(): # Iterate over each sequence
+        mrna_sequence = transcribe_to_mrna(dna_sequence) # Transcribe DNA to
+        # mRNA (Call transcribe_to_mrna function)
+        with open(output_file, "w") as f: # Open "2c_HFE_mrna_variants" file
+            # for writing
+            f.write(f">{seq_id}\n") # Write header including sequence ID
+            f.write(mrna_sequence + "\n") # Write transcribed mRNA sequence
+    print(f"Converted HFE gene sequence to mRNA successfully and saved to"
+          f" {output_file}") # Print to notify successful transcription and
+    # "output" file location
+
 
 def parse_gtf_for_transcripts(gtf_file, gene_id):
     """
@@ -101,6 +128,7 @@ def parse_gtf_for_transcripts(gtf_file, gene_id):
                     # exon start and end positions to list within dictionary
     return transcripts # Transcript information dictionary
 
+
 def extract_exon_sequences(reference_file, chrom, exons, strand):
     """
     Extracts the combined sequence for a list of exons from the reference
@@ -129,28 +157,6 @@ def extract_exon_sequences(reference_file, chrom, exons, strand):
         # complement for negative strand
     return sequence # Return forward/reverse sequence
 
-def convert_gene_to_mrna(hfe_gene_file, output_file):
-    """
-    Converts "2b_HFE_gene.fasta" file into mRNA file ("2c_HFE_mrna_variants").
-
-    Args:
-        hfe_gene_file (str): Path to HFE gene DNA sequence file (
-        "2b_HFE_gene.fasta").
-        output_file (str): Output file path to save mRNA sequence (
-        "2c_HFE_mrna_variants").
-    """
-    sequences = parse_fasta(hfe_gene_file) # Parse gene sequence file (Call
-    # parse_fasta function)
-    for seq_id, dna_sequence in sequences.items(): # Iterate over each sequence
-        mrna_sequence = transcribe_to_mrna(dna_sequence) # Transcribe DNA to
-        # mRNA (Call transcribe_to_mrna function)
-        with open(output_file, "w") as f: # Open "2c_HFE_mrna_variants" file
-            # for writing
-            f.write(f">{seq_id}\n") # Write header including sequence ID
-            f.write(mrna_sequence + "\n") # Write transcribed mRNA sequence
-    print(f"Converted HFE gene sequence to mRNA successfully and saved to"
-          f" {output_file}") # Print to notify successful transcription and
-    # "output" file location
 
 def main():
     # Define GeneID for which to extract mRNA variants
@@ -196,6 +202,7 @@ def main():
 
     except Exception as e:
         print(f"Error: {e}")
+
 
 if __name__ == "__main__":
     main()
