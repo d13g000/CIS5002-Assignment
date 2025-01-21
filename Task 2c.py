@@ -163,19 +163,19 @@ def extract_exon_sequences(reference_file, chrom, exons, strand):
 
 def main():
     try:
-        # Step 1: Transcribes DNA gene sequence into mRNA
+        # Step 1: Transcribe DNA gene sequence into mRNA
         hfe_mrna_file = os.path.join(task_2_dir, "2c_HFE_gene_mRNA.fasta")
         # File path for transcribed mRNA sequence
         convert_gene_to_mrna(gene_sequence_file, hfe_mrna_file) # Call
         # convert_gene_to_mrna function
 
-        # Step 2: Parses "Annotations" GTF file to determine transcript variants
+        # Step 2: Parse "Annotations" GTF file to determine transcript variants
         transcripts = parse_gtf_for_transcripts(annotations_file, gene_id)
         # Call parse_gtf_for_transcripts function
         print(f"Found {len(transcripts)} transcript variants for GeneID "
               f"{gene_id}.") # Print number of transcripts found
 
-        # Step 3: a) Extracts transcript sequences and saves them into FASTA
+        # Step 3: a) Extract transcript sequences and saves them into FASTA
         # files
         for transcript_id, data in transcripts.items():
             chrom, strand, exons = data["chrom"], data["strand"], data["exons"]
@@ -183,11 +183,11 @@ def main():
                                                   chrom, exons, strand)
             # Call extract_exon_sequences function
 
-            # b) Transcribes DNA to mRNA
+            # b) Transcribe DNA to mRNA
             mrna_sequence = transcribe_to_mrna(dna_sequence) # Call
             # transcribe_to_mrna function
 
-            # c) Saves mRNA sequences to a FASTA files
+            # c) Save mRNA sequences to files
             output_file = os.path.join(output, f"2c_{transcript_id}_mRNA.fasta")
             # Output file name and path (within "output" folder)
             with open(output_file, "w") as f: # Open transcript ID output file
