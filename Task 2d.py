@@ -1,7 +1,16 @@
 import os
 
-# Genetic Code Table for Translation
-GENETIC_CODE = {
+# Define directory and file paths
+script_dir = os.path.dirname(os.path.abspath(__file__))
+task_2_dir = os.path.join(script_dir, "Task 2")
+
+mrna_file = os.path.join(task_2_dir, "2c_HFE_gene_mrna.fasta") # File path
+# for mRNA sequence generated in script for Task 2c
+output = os.path.join(task_2_dir, "2d_HFE_protein_reading_frames")
+# Output folder path and name
+
+# Translation table
+translation_table = {
     'UUU': 'F', 'UUC': 'F', 'UUA': 'L', 'UUG': 'L',
     'UCU': 'S', 'UCC': 'S', 'UCA': 'S', 'UCG': 'S',
     'UAU': 'Y', 'UAC': 'Y', 'UAA': '*', 'UAG': '*',
@@ -18,162 +27,195 @@ GENETIC_CODE = {
     'GCU': 'A', 'GCC': 'A', 'GCA': 'A', 'GCG': 'A',
     'GAU': 'D', 'GAC': 'D', 'GAA': 'E', 'GAG': 'E',
     'GGU': 'G', 'GGC': 'G', 'GGA': 'G', 'GGG': 'G',
-}
+} # Dictionary mapping mRNA codons to their corresponding amino acids
+
 
 def translate_sequence(sequence):
     """
-    Translates an mRNA sequence into a protein sequence.
+    Translates mRNA sequence into protein sequence.
 
     Args:
-        sequence (str): The mRNA sequence.
+        sequence (str): mRNA sequence.
 
     Returns:
-        str: The translated protein sequence.
+        str: Translated protein sequence.
     """
-    protein = []
-    for i in range(0, len(sequence) - 2, 3):  # Process in codons (triplets)
-        codon = sequence[i:i + 3]
-        amino_acid = GENETIC_CODE.get(codon, '')
+    protein = [] # Empty list to store protein sequence
+    for i in range(0, len(sequence) - 2, 3):  # Iterate over mRNA sequence in
+        # codons (triplets)
+        codon = sequence[i:i + 3] # Extract codon (3 nucleotides)
+        amino_acid = translation_table.get(codon, '') # Get corresponding
+        # amino acid for extracted codon
         if amino_acid:  # Skip invalid codons
-            protein.append(amino_acid)
-    return ''.join(protein)
+            protein.append(amino_acid) # Add amino acid to protein sequence list
+    return ''.join(protein) # Return protein sequence as string of joined
+    # amino acids
+
 
 def reverse_complement(sequence):
     """
-    Computes the reverse complement of an RNA sequence.
+    Computes reverse complement of mRNA sequence.
 
     Args:
-        sequence (str): The RNA sequence.
+        sequence (str): mRNA sequence.
 
     Returns:
-        str: The reverse complement RNA sequence.
+        str: Reverse complement of mRNA sequence.
     """
-    complement = str.maketrans("AUCG", "UAGC")
-    return sequence.translate(complement)[::-1]
+    complement = str.maketrans("AUCG", "UAGC") # Complement table
+    return sequence.translate(complement)[::-1] # Return translated and
+    # reversed sequence
 
-def find_orf_sequence(protein_sequence):
-    """
-    Extracts the ORF from a given protein sequence.
-    The ORF starts with 'M' (methionine) and ends at the first '*' (stop codon).
-    This version excludes the stop codon.
-
-    Args:
-        protein_sequence (str): The full protein sequence.
-
-    Returns:
-        str: The ORF sequence (from 'M' to the first codon before '*').
-    """
-    start_index = protein_sequence.find('M')
-    if start_index == -1:
-        return ""  # No start codon found
-
-    stop_index = protein_sequence.find('*', start_index)
-    if stop_index == -1:
-        return protein_sequence[start_index:]  # No stop codon found, return from start to the end
-
-    return protein_sequence[start_index:stop_index]  # Exclude the stop codon
-
-def find_orfs(protein_sequences):
-    """
-    Finds the longest ORF among all reading frames.
-
-    Args:
-        protein_sequences (dict): Dictionary of protein sequences for each reading frame.
-
-    Returns:
-        tuple: The longest ORF protein sequence and its reading frame.
-    """
-    longest_orf = ""
-    longest_frame = -1
-
-    for frame, protein_sequence in protein_sequences.items():
-        orf = find_orf_sequence(protein_sequence)
-        if len(orf) > len(longest_orf):
-            longest_orf = orf
-            longest_frame = frame
-
-    return longest_orf, longest_frame
 
 def translate_mrna(mrna_sequence):
     """
     Translates the mRNA sequence in all six reading frames.
 
     Args:
-        mrna_sequence (str): The mRNA sequence.
+        mrna_sequence (str): mRNA sequence.
 
     Returns:
-        dict: A dictionary with frame numbers (1-6) and the corresponding protein sequences.
+        dict: Dictionary with frame numbers (1-6) and their corresponding
+        protein sequences.
     """
-    protein_sequences = {}
+    protein_sequences = {} # Empty dictionary to store protein sequences from
+    # each reading frame
 
     # Forward frames (1, 2, 3)
     for frame in range(3):
         frame_sequence = mrna_sequence[frame:]
         protein_sequences[frame + 1] = translate_sequence(frame_sequence)
+        # Offset sequence for each frame by single nucleotide and translate
+        # it (Call translate_sequence function)
 
     # Reverse complement frames (4, 5, 6)
-    reverse_comp_sequence = reverse_complement(mrna_sequence)
+    reverse_comp_sequence = reverse_complement(mrna_sequence) # Compute
+    # reverse complement (Call reverse complement function)
     for frame in range(3):
         frame_sequence = reverse_comp_sequence[frame:]
         protein_sequences[frame + 4] = translate_sequence(frame_sequence)
 
-    return protein_sequences
+    return protein_sequences # Dictionary of protein sequences generated from
+    # each frame
+
+
+def find_orf_sequence(protein_sequence):
+    """
+    Extracts open reading frame (ORF) from protein sequence where ORF starts
+    with 'M' (methionine) and ends at the first '*' (stop codon).
+
+    Args:
+        protein_sequence (str): Protein sequence.
+
+    Returns:
+        str: ORF sequence (from 'M' to the first amino acid before '*').
+    """
+    start_index = protein_sequence.find('M') # Find first 'M' (start codon)
+    if start_index == -1: # No start codon found
+        return "" # Return empty string
+
+    stop_index = protein_sequence.find('*', start_index) # Find first '*'
+    # (stop codon) after first start codon
+    if stop_index == -1: # No stop codon found
+        return protein_sequence[start_index:]  # Return protein sequence from
+        # start to the end
+
+    return protein_sequence[start_index:stop_index]  # Return ORF
+    # sequence excluding stop codon
+
+
+def find_orfs(protein_sequences):
+    """
+    Finds longest ORF among all reading frames.
+
+    Args:
+        protein_sequences (dict): Dictionary of protein sequences produced
+        using each reading frame.
+
+    Returns:
+        tuple: Longest ORF sequence and its respective reading frame.
+    """
+    longest_orf = "" # Empty string to store ORF
+    longest_frame = -1 # Initialise frame number
+
+    for frame, protein_sequence in protein_sequences.items(): # Iterate
+        # through each reading frame
+        orf = find_orf_sequence(protein_sequence) # Extract ORF for each
+        # frame (Call find_orf_sequence function)
+        if len(orf) > len(longest_orf): # Check if ORF extracted is longest
+            longest_orf = orf # Update ORF
+            longest_frame = frame # Update frame number
+
+    return longest_orf, longest_frame # Return longest ORF and its respective
+    # frame
+
 
 def translate_mrna_to_orf(mrna_file, output_folder):
     """
-    Translates the mRNA sequence in all six frames and finds the correct ORF.
+    Translates mRNA sequence for all six frames and finds ORF.
 
     Args:
-        mrna_file (str): Path to the input FASTA file containing the mRNA sequence.
-        output_folder (str): Path to the folder where the protein sequences will be saved.
+        mrna_file (str): Path to FASTA file containing gene mRNA sequence (
+        "2c_HFE_gene_mrna.fasta").
+        output_folder (str): Path to folder where the protein sequences will
+        be saved ("2d_HFE_protein_reading_frames").
     """
     try:
-        # Read the mRNA sequence from the FASTA file
+        # Read mRNA sequence from the FASTA file
         with open(mrna_file, "r") as f:
-            lines = f.readlines()
-            header = lines[0].strip()  # FASTA header
-            mrna_sequence = "".join(line.strip() for line in lines[1:])  # Join mRNA sequence lines
+            lines = f.readlines() # Read all lines from
+            # "2c_HFE_gene_mrna.fasta" FASTA file
+            header = lines[0].strip()  # Extract FASTA file header
+            mrna_sequence = "".join(line.strip() for line in lines[1:])
+            # Combine mRNA sequence lines
 
         # Translate mRNA to protein sequences in all six frames
-        protein_sequences = translate_mrna(mrna_sequence)
+        protein_sequences = translate_mrna(mrna_sequence) # Call
+        # translate_mrna function
 
         # Find the longest ORF
-        longest_orf, longest_frame = find_orfs(protein_sequences)
+        longest_orf, longest_frame = find_orfs(protein_sequences) # Call
+        # find_orfs function
 
-        # Print the longest ORF and its frame
-        print(f"The ORF is found in Frame {longest_frame}")
+        print(f"The ORF is found in Frame {longest_frame}") # Print frame
+        # belonging to ORF
         print(f"ORF Protein Sequence ({len(longest_orf)} aa): {longest_orf}")
+        # Print ORF sequence and length in amino acids
 
-        # Create output folder if it doesn't exist
+        # Create "2d_HFE_protein_reading_frames" output folder if not present
         os.makedirs(output_folder, exist_ok=True)
 
-        # Write the protein sequences for each frame to separate FASTA files
+        # Write protein sequences for each frame to separate FASTA files
         for frame, protein_sequence in protein_sequences.items():
-            output_file = os.path.join(output_folder, f"HFE_protein_reading_frame_{frame}.fasta")
+            output_file = os.path.join(output_folder,
+            f"2d_HFE_protein_reading_frame_{frame}.fasta") # Name files
+            # according to frame where 1, 2, 3 are forward frames and 4, 5,
+            # 6 are reverse complement frames
             with open(output_file, "w") as f:
-                f.write(f"{header} (Frame {frame})\n")
-                f.write(protein_sequence + "\n")
-            print(f"Protein sequence for Frame {frame} saved to {output_file}")
+                f.write(f"{header} (Frame {frame})\n") # Write header
+                # including extracted FASTA file header and frame number
+                f.write(protein_sequence + "\n") # Write protein sequence
+                # associated to frame
+            print(f"Protein sequence for Frame {frame} successfully saved to "
+                  f"{output_file}") # Print "output_file" location
 
-        # Save the longest ORF to a separate file
-        orf_output_file = os.path.join(output_folder, "HFE_ORF_sequence.fasta")
+        # Save ORF to a separate file
+        orf_output_file = os.path.join(output_folder,
+                                       "2d_HFE_ORF_sequence.fasta")
         with open(orf_output_file, "w") as f:
-            f.write(f"{header} (Longest ORF: Frame {longest_frame})\n")
-            f.write(longest_orf + "\n")
-        print(f"ORF sequence saved to {orf_output_file}")
+            f.write(f"{header} (ORF: Frame {longest_frame})\n")
+            # Write header including extracted FASTA file header and ORF frame
+            # number
+            f.write(longest_orf + "\n") # Write ORF sequence
+        print(f"ORF sequence successfully saved to {orf_output_file}")
 
     except Exception as e:
         print(f"Error in translation: {e}")
 
 def main():
-    # Define paths
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    task_2b_dir = os.path.join(script_dir, "Task 2")
-    mrna_file = os.path.join(task_2b_dir, "HFE_gene_mrna.fasta")
-    output_folder = os.path.join(task_2b_dir, "HFE_protein_reading_frames")
-
-    # Translate mRNA to find the ORF and output the sequences
-    translate_mrna_to_orf(mrna_file, output_folder)
+    # Translate mRNA to protein and find ORF
+    translate_mrna_to_orf(mrna_file, output) # Call translate_mrna_to_orf
+    # function
 
 if __name__ == "__main__":
     main()
