@@ -48,16 +48,18 @@ def parse_fasta(file_path):
 
 def transcribe_to_mrna(dna_sequence):
     """
-    Transcribes DNA sequence to mRNA by replacing T/t with U/u.
+    Transcribes DNA to mRNA (builds mRNA sequence complementary to DNA then
+    replaces occurrences of T/t with U/u).
 
     Args:
-        dna_sequence (str): DNA sequence to transcribe.
+        dna_sequence (str): DNA sequence.
 
     Returns:
         str: Transcribed mRNA sequence.
     """
-    return dna_sequence.replace("T", "U").replace("t", "u") # Replace thymine
-    # (T/t) with uracil (U/u)
+    complement = str.maketrans("ACGTacgt", "UGCAugca")
+    return dna_sequence.translate(complement).replace("T", "U")
+    # Return transcribed DNA sequence (mRNA sequence)
 
 
 def convert_gene_to_mrna(hfe_gene_file, output_file):
@@ -155,7 +157,7 @@ def extract_exon_sequences(reference_file, chrom, exons, strand):
     sequence = "".join(sequences[chrom][start - 1:end].upper() for start,
     end in sorted(exons))
     if strand == "-": # Handle reverse complement for for negative strand
-        complement = str.maketrans("ACGTacgt", "UGCAugca")
+        complement = str.maketrans("ACGTacgt", "TGCAtgca")
         sequence = sequence.translate(complement)[::-1]  # Reverse
         # complement for negative strand
     return sequence # Return forward/reverse sequence
@@ -197,8 +199,9 @@ def main():
                 f.write(mrna_sequence.strip() + "\n") # Write extracted mRNA
                 # sequence
 
-            print(f"Saved mRNA sequence for transcript {transcript_id} to "
-                  f"{output_file}") # Print "output_file" file location
+            print(f"Successfully saved mRNA sequence for transcript"
+                  f" {transcript_id} to {output_file}") # Print "output_file"
+            # file location
 
     except Exception as e:
         print(f"Error: {e}")
