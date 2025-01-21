@@ -187,7 +187,7 @@ def main():
             mrna_sequence = transcribe_to_mrna(dna_sequence) # Call
             # transcribe_to_mrna function
 
-            # c) Save mRNA sequences to files
+            # c) Save mRNA sequences to  files
             output_file = os.path.join(output, f"2c_{transcript_id}_mRNA.fasta")
             # Output file name and path (within "output" folder)
             with open(output_file, "w") as f: # Open transcript ID output file
