@@ -8,7 +8,7 @@ reference_genome_file = os.path.join(task_2_dir, "Reference genome.fna")
 annotations_file = os.path.join(task_2_dir, "Annotations.gtf")
 gene_sequence_file = os.path.join(task_2_dir, "2b_HFE_gene.fasta") # File path
 # for gene sequence generated in script for Task 2b
-output = os.path.join(task_2_dir, "2c_HFE_mRNA_variants") # Output file path
+output = os.path.join(task_2_dir, "2c_HFE_mRNA_variants") # Output folder path
 # and name
 
 # Ensure output directory exists
@@ -16,6 +16,7 @@ os.makedirs(output, exist_ok=True) # Create output directory if non-existent
 
 # Define GeneID
 gene_id = "3077"  # GeneID for HFE
+
 
 def parse_fasta(file_path):
     """
