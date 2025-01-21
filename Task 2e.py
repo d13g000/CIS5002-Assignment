@@ -4,7 +4,7 @@ import os
 script_dir = os.path.dirname(os.path.abspath(__file__))
 task_2_dir = os.path.join(script_dir, "Task 2")
 
-protein_file = os.path.join(task_2_dir, "Protein.faa") # Path to RefSeq
+protein_file = os.path.join(task_2_dir, "Proteins.faa") # Path to RefSeq
 # protein file
 protein_frame_dir = os.path.join(task_2_dir,
                                      "2d_HFE_protein_reading_frames")
@@ -12,7 +12,7 @@ protein_frame_dir = os.path.join(task_2_dir,
 protein_orf_file = os.path.join(protein_frame_dir,
                                         "2d_HFE_ORF_sequence.fasta") # Path
 # to HFE ORF sequence file from Task 2d
-output_file = os.path.join(task_2_dir, "2e_HFE_protein_comparison.txt") #
+output_file = os.path.join(task_2_dir, "2e_HFE_protein_comparison.txt")
 # Output file path and name
 
 # Ensure the output directory exists
