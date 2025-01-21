@@ -19,6 +19,7 @@ output = os.path.join(task_2_dir, "2b_HFE_gene.fasta") # Output file path
 gene_id = "3077" # GeneID for HFE
 transcript_id = "NM_000410.4" # TranscriptID for HFE
 
+
 def extract_genomic_location(gtf_file, gene_id, transcript_id):
     """
     Extracts the genomic location of the HFE gene using both its GeneID and
@@ -61,6 +62,7 @@ def extract_genomic_location(gtf_file, gene_id, transcript_id):
         f"GeneID {gene_id} or Transcript ID {transcript_id} not "
         f"found in the GTF file.") # Raise error if GeneID and/or
     # TranscriptID are not found
+
 
 def parse_fasta(file_path):
     """
