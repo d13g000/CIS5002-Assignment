@@ -117,7 +117,7 @@ def compare_sequences(hfe_sequence, refseq_sequence, output_file):
 
 def main():
     try:
-        # Read HFE ORF sequence
+        # Step 1: Read HFE ORF sequence
         if not os.path.exists(protein_orf_file): # Check if
             # "2d_HFE_ORF_sequence.fasta" ORF file exists
             raise FileNotFoundError(f"File not found: {protein_orf_file}")
@@ -125,7 +125,7 @@ def main():
         hfe_sequence = read_protein_sequence(protein_orf_file) # Read ORF
         # sequence from file (Call read_protein_sequence function)
 
-        # Extract RefSeq protein sequence
+        # Step 2: Extract RefSeq protein sequence
         if not os.path.exists(protein_file): # Check if "Protein.faa" RefSeq
             # file exists
             raise FileNotFoundError(f"File not found: {protein_file}")
@@ -135,7 +135,7 @@ def main():
         # RefSeq sequence for the given protein reference ID (Call
         # extract_refseq_sequence function)
 
-        # Compare sequences and write results
+        # Step 3: Compare sequences and write results
         compare_sequences(hfe_sequence, refseq_sequence, output_file)
         # Compare sequences and save the results (Call compare_sequences
         # function)
