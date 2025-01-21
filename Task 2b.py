@@ -126,7 +126,7 @@ def extract_sequence(reference_file, chrom, start, end, strand):
 
 def main():
     try:
-        # Step 1: Extracts HFE gene location using "Annotations" file and,
+        # Step 1: Extract HFE gene location using "Annotations" file and,
         # geneID and transcriptID information
         gene_location = extract_genomic_location(annotations_file, gene_id,
                                                  transcript_id) # Call
@@ -135,7 +135,7 @@ def main():
         # location details (chromosome number, start and end locations and,
         # strand)
 
-        # Step 2: Extracts sequence from reference genome using "Reference
+        # Step 2: Extract sequence from reference genome using "Reference
         # genome" file and location details extracted when calling
         # extract_genomic_location function
         hfe_sequence = extract_sequence(
@@ -146,7 +146,7 @@ def main():
             gene_location["strand"],
         ) # Call extract_sequence function
 
-        # Step 3: Writes extracted sequence into FASTA file
+        # Step 3: Write extracted sequence into file
         with open(output, "w") as f: # Open "output" file
             f.write(f">HFE_gene|GeneID:{gene_id}|TranscriptID:{transcript_id}|"
                 f"{gene_location['chrom']}:{gene_location['start']}-"
