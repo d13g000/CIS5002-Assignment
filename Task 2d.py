@@ -215,7 +215,7 @@ def translate_mrna_to_orf(mrna_file, output_folder):
 
 
 def main():
-    # Translate mRNA to protein and find ORF
+    # Step 1: Translate mRNA to protein and find ORF
     translate_mrna_to_orf(mrna_file, output)  # Call translate_mrna_to_orf
     # function
 
