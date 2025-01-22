@@ -4,7 +4,7 @@ import os
 script_dir = os.path.dirname(os.path.abspath(__file__))
 task_2_dir = os.path.join(script_dir, "Task 2")
 
-mrna_file = os.path.join(task_2_dir, "2c_HFE_gene_mrna.fasta")  # File path
+mrna_file = os.path.join(task_2_dir, "2c_HFE_gene_mRNA.fasta")  # File path
 # for mRNA sequence generated in script for Task 2c
 output = os.path.join(task_2_dir, "2d_HFE_protein_reading_frames")
 # Output folder path and name
@@ -47,8 +47,8 @@ def translate_sequence(sequence):
         amino_acid = translation_table.get(codon, '')  # Get corresponding
         # amino acid for extracted codon
         if amino_acid:  # Skip invalid codons
-            protein.append(
-                amino_acid)  # Add amino acid to protein sequence list
+            protein.append(amino_acid)  # Add amino acid to protein sequence
+            # list
     return ''.join(protein)  # Return protein sequence as string of joined
     # amino acids
 
@@ -169,6 +169,10 @@ def translate_mrna_to_orf(mrna_file, output_folder):
             header = lines[0].strip()  # Extract FASTA file header
             mrna_sequence = "".join(line.strip() for line in lines[1:])
             # Combine mRNA sequence lines
+
+        mrna_sequence = "".join([base for base in mrna_sequence if
+                                 base.isupper()]) # Remove lowercase letters
+        # (soft-masked/non-coding regions)
 
         # Translate mRNA to protein sequences in all six frames
         protein_sequences = translate_mrna(mrna_sequence)  # Call
