@@ -8,7 +8,7 @@ import sqlparse  # Import sqlparse library to parse and split SQL scripts
 db_config = {
     "host": "localhost", # Hostname of database server
     "user": "root", # Username to connect to database
-    "password": "Diegito16599!", # Password for database user
+    "password": "password", # Password for database user
     "database": "gene_ontology" # Name of database to use
 }
 
