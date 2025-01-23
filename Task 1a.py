@@ -26,8 +26,11 @@ sequences_dir = os.path.join(main_dir, "1a_species_sequences")
 os.makedirs(sequences_dir, exist_ok=True) # Create subdirectory if nonexistent
 
 
-# Download sequences from UniProt using species dictionary
 def download_sequences():
+    """
+    Download sequences from UniProt using species dictionary
+
+    """
     print("Downloading sequences...") # Notify start of process
     for species_name, accession in species.items(): # Iterate through each
         # species and associated accession number
@@ -48,8 +51,13 @@ def download_sequences():
             # notification of failure
 
 
-# Add empty line before each header in FASTA file
 def add_empty_line(file_path):
+    """
+    Add empty line before each header in FASTA file
+
+    Args:
+        file_path (str): Path to FASTA file being modified
+    """
     with open(file_path, "r") as infile: # Open file for reading "r"
         lines = infile.readlines() # Read all lines
     with open(file_path, "w") as outfile:
@@ -59,8 +67,13 @@ def add_empty_line(file_path):
             outfile.write(line) # Write line into file
 
 
-# Perform sequence alignment using specified tool (Clustal Omega / MAFFT)
 def run_alignment(tool):
+    """
+    Perform sequence alignment using specified tool (Clustal Omega / MAFFT)
+
+    Args:
+        tool (str): Name of alignment tool ("clustalo" / "mafft")
+    """
     # Combine all individual sequence files into a single file for multiple
     # alignment
     combined_file = os.path.join(sequences_dir, "1a_combined_sequences.fasta")
