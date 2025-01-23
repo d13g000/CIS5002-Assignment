@@ -67,7 +67,7 @@ def run_alignment(tool):
     with open(combined_file, "w") as outfile:
         for species_name in species.keys(): # Iterate through species
             infile = os.path.join(sequences_dir,
-                        f"{species_name.replace(' ', '_')}.fasta")
+                        f"1a_{species_name.replace(' ', '_')}.fasta")
             for record in SeqIO.parse(infile, "fasta"): # Parse FASTA file
                 # using Biopython
                 SeqIO.write(record, outfile, "fasta") # Write each record
