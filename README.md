@@ -1,6 +1,85 @@
 # CIS5002-Assignment
 CIS5002 Assignment
 
+1a) Download species sequences and MSA
+This Python script automates the process of downloading protein sequences from UniProt, preparing them for analysis, and performing multiple sequence alignments using Clustal Omega ("clustalo") and MAFFT. 
+The script is designed to handle sequences from multiple species and outputs the aligned sequences into specified files ("1a_{tool}_alignment.fasta").
+
+--> Features:
+ - Downloads protein sequences for specified species using their scientific species name and respective Heme oxygenase 1 UniProt accession number. 
+ - Combines downloaded sequences into a single file for alignment.
+ - Performs multiple sequence alignment using Clustal Omega and MAFFT and saves the aligned sequences in separate output files.
+
+--> Prerequisites:
+ - Biopython (Library to parse and handle biological data) 
+   - Linux download: pip install biopython / conda install biopython
+   - iOS download: brew install biopython / conda install biopython
+ - Requests (Library to facilitate HTTP requests and fetching data)
+   - Linux download: pip install requests / conda install requests
+   - iOS download: brew install requests / conda install requests
+ - Clustal Omega (Tool to run multiple sequence alignment)
+   - download: http://www.clustal.org/omega/#Download
+ - MAFFT (Tool to run multiple sequence alignment)
+   - download: https://mafft.cbrc.jp/alignment/software/
+ - The following files and directory structure:
+    - Task 1 folder/directory 
+      - 1a_species_sequences (folder/directory containing downloaded sequences)
+ 
+--> Input files:
+ - NONE (script uses defined species and corresponding accession number dictionary)
+
+--> Output files:
+ - 1a_{tool}_alignment.fasta (FASTA files corresponding to Clustal Omega and MAFFT alignment results)
+ - The following files and directory structure:
+   - Species sequences (folder/directory containing downloaded sequences)
+     - 1a_{species_name}.fasta (FASTA files containing sequence from specific species)
+ 
+
+---
+1b) MariaDB upload
+This Python script automates the process of creating a MariaDB database (if it does not already exist) and importing an SQL dump file ("go-dump.sql") into the database.
+
+--> Features:
+ - Verifies the existence of the specified database (gene_ontology) in MariaDB and creates it if absent.
+ - Imports SQL dump files into the database, parsing and executing the SQL statements individually for flexibility and error handling.
+
+--> Prerequisites:
+ - mysql-connector (Library to connect and interact with MariaDB)
+   - Linux download: pip install mysql-connector-python / conda install mysql-connector-python
+   - iOS download: brew install mysql-connector-python / conda install mysql-connector-python
+ - sqlparse (Library to parse and split SQL scripts)
+   - Linux download: pip install sqlparse / conda install sqlparse
+   - iOS download: brew install sqlparse / conda install sqlparse
+ - MariaDB (Server to store SQL files)
+   - Linux download:
+       # Install MariaDB
+       - sudo apt update 
+       - sudo apt install mariadb-server mariadb-client
+       # Start and Enable MariaDB
+       - sudo systemctl start mariadb 
+       - sudo systemctl enable mariadb
+       # Set root password and configure security settings
+       - sudo mysql_secure_installation
+       # Log in and test installation
+       - mysql -u root -p
+   - iOS download:
+       # Install MariaDB
+       - brew install mariadb
+       # Start MariaDB server
+       - brew services start mariadb
+       # Test installation
+       - mysql -u root
+ - The following files and directory structure:
+    - Task 1 folder/directory 
+      - go-dump.sql (SQL file to import into the MariaDB database)
+ 
+--> Input files:
+ - Gene ontology file ("go-dump.sql")
+
+--> Output files:
+ - NONE (script creates a MariaDB database named gene_ontology including the data defined in the go-dump.sql file)
+
+
 ---
 2b) HFE gene extraction
 This Python script extracts the genomic sequence of the HFE gene from a reference genome ("Reference genome.fna") based on a GTF annotation file ("Annotations.gtf").
