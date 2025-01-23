@@ -22,7 +22,7 @@ os.makedirs(main_dir, exist_ok=True) # Create directory if nonexistent
 
 # Create subdirectory to storing downloaded files for sequences from
 # different species
-sequences_dir = os.path.join(main_dir, "Species sequences")
+sequences_dir = os.path.join(main_dir, "1a_species_sequences")
 os.makedirs(sequences_dir, exist_ok=True) # Create subdirectory if nonexistent
 
 
@@ -36,7 +36,7 @@ def download_sequences():
         response = requests.get(url) # Fetch sequence data from URL
         if response.status_code == 200: # Check if request is successful
             file_path = os.path.join (sequences_dir,
-                        f"{species_name.replace(' ', '_')}.fasta")
+                        f"1a_{species_name.replace(' ', '_')}.fasta")
             # Set file path and name within which to save sequence
             with open(file_path, "w") as file: # Open file for writing "w"
                 file.write(response.text) # Write and save fetched sequence
@@ -63,7 +63,7 @@ def add_empty_line(file_path):
 def run_alignment(tool):
     # Combine all individual sequence files into a single file for multiple
     # alignment
-    combined_file = os.path.join(sequences_dir, "Combined_sequences.fasta")
+    combined_file = os.path.join(sequences_dir, "1a_combined_sequences.fasta")
     with open(combined_file, "w") as outfile:
         for species_name in species.keys(): # Iterate through species
             infile = os.path.join(sequences_dir,
@@ -76,7 +76,7 @@ def run_alignment(tool):
     # add_empty_line function)
 
     # Define output file and run alignment
-    aligned_file = os.path.join(main_dir, f"{tool}_alignment.fasta")
+    aligned_file = os.path.join(main_dir, f"1a_{tool}_alignment.fasta")
     # Clustal Omega
     if tool == "clustalo":
         print("Running Clustal Omega alignment...") # Notify of alignment
