@@ -8,7 +8,7 @@ task_2_dir = os.path.join(script_dir, "Task 2") # Path to "Task 2" folder
 # within same directory as script
 
 # File names within the Task 2 folder
-reference_genome_file = os.path.join(task_2_dir, "Reference genome.fna")
+reference_genome_file = os.path.join(task_2_dir, "Reference_genome.fna")
 # File path for "Reference genome"
 annotations_file = os.path.join(task_2_dir, "Annotations.gtf") # File path
 # for "Annotations"
