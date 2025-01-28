@@ -29,7 +29,6 @@ os.makedirs(sequences_dir, exist_ok=True) # Create subdirectory if nonexistent
 def download_sequences():
     """
     Download sequences from UniProt using species dictionary
-
     """
     print("Downloading sequences...") # Notify start of process
     for species_name, accession in species.items(): # Iterate through each
@@ -67,6 +66,22 @@ def add_empty_line(file_path):
             outfile.write(line) # Write line into file
 
 
+def combine_fasta_files(output_file):
+    """
+    Combine all individual FASTA files into a single file for multiple
+    alignment.
+    """
+    with open(output_file, "w") as outfile: # Open output file (combined
+        # sequences) for writing "w"
+        for species_name in species.keys(): # Iterate through species
+            infile_path = os.path.join(sequences_dir,
+                        f"1a_{species_name.replace(' ', '_')}.fasta")
+            with open(infile_path, "r") as infile: # Open input file (species
+                # sequences) for reading "r"
+                outfile.write(infile.read()) # Write each record into
+                # combined file
+
+
 def run_alignment(tool):
     """
     Perform sequence alignment using specified tool (Clustal Omega / MAFFT)
@@ -77,16 +92,11 @@ def run_alignment(tool):
     # Combine all individual sequence files into a single file for multiple
     # alignment
     combined_file = os.path.join(sequences_dir, "1a_combined_sequences.fasta")
-    with open(combined_file, "w") as outfile:
-        for species_name in species.keys(): # Iterate through species
-            infile = os.path.join(sequences_dir,
-                        f"1a_{species_name.replace(' ', '_')}.fasta")
-            for record in SeqIO.parse(infile, "fasta"): # Parse FASTA file
-                # using Biopython
-                SeqIO.write(record, outfile, "fasta") # Write each record
-                # into combined file
-    add_empty_line(combined_file) # Add empty line before each header (Call
-    # add_empty_line function)
+    combine_fasta_files(combined_file) # Combine FASTA files containing
+    # sequence for each species into single combined file (Call
+    # combine_fasta_files function)
+    add_empty_line(combined_file) # Add empty line between each sequence in
+    # combined file to make it easier to read (Call add_empty_line function)
 
     # Define output file and run alignment
     aligned_file = os.path.join(main_dir, f"1a_{tool}_alignment.fasta")
