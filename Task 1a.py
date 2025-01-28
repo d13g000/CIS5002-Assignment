@@ -2,8 +2,6 @@ import os # Import os library to interact with operating system
 import subprocess # Import subprocess to allow running external commands and
 # processes
 import requests # Import requests to facilitate HTTP requests to fetch data
-from Bio import SeqIO # Import SeqIO part from Biopython library to be able
-# to parse and handle biological sequence data
 
 # Define species and UniProt accession numbers (dictionary of species and
 # associated Heme oxygenase 1 sequence accession number)
