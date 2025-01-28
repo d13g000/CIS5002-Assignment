@@ -9,7 +9,7 @@ task_2_dir = os.path.join(script_dir, "Task 2") # Path to "Task 2" folder
 
 # File names within the Task 2 folder
 reference_genome_file = os.path.join(task_2_dir, "Reference_genome.fna")
-# File path for "Reference genome"
+# File path for "Reference_genome"
 annotations_file = os.path.join(task_2_dir, "Annotations.gtf") # File path
 # for "Annotations"
 output = os.path.join(task_2_dir, "2b_HFE_gene.fasta") # Output file path
@@ -99,7 +99,7 @@ def extract_sequence(reference_file, chrom, start, end, strand):
     Extracts sequence from specified region within reference genome.
 
     Args:
-        reference_file (str): File path for "Reference genome".
+        reference_file (str): File path for "Reference_genome".
         chrom (str): Chromosome number.
         start (int): Start location.
         end (int): End location.
@@ -108,7 +108,7 @@ def extract_sequence(reference_file, chrom, start, end, strand):
     Returns:
         str: Extracted HFE gene sequence.
     """
-    sequences = parse_fasta(reference_file) # Parse "Reference genome" file
+    sequences = parse_fasta(reference_file) # Parse "Reference_genome" file
     # into dictionary (Call parse_fasta function)
     if chrom not in sequences: # Check if specified chromosome number exists
         # in genome
@@ -135,8 +135,8 @@ def main():
         # location details (chromosome number, start and end locations and,
         # strand)
 
-        # Step 2: Extract sequence from reference genome using "Reference
-        # genome" file and location details extracted when calling
+        # Step 2: Extract sequence from reference genome using
+        # "Reference_genome" file and location details extracted when calling
         # extract_genomic_location function
         hfe_sequence = extract_sequence(
             reference_genome_file,
