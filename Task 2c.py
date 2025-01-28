@@ -134,13 +134,13 @@ def parse_gtf_for_transcripts(gtf_file, gene_id):
     return transcripts # Transcript information dictionary
 
 
-def extract_exon_sequences(reference_file, chrom, exons, strand):
+def extract_variant_sequences(reference_file, chrom, exons, strand):
     """
     Extracts the combined sequence for a list of exons from the reference
     genome.
 
     Args:
-        reference_file (str): Path to "Reference genome".
+        reference_file (str): Path to "Reference_genome".
         chrom (str): Chromosome number.
         exons (list): Tuple representing exon start and end positions.
         strand (str): Strand information (+/-).
@@ -148,7 +148,7 @@ def extract_exon_sequences(reference_file, chrom, exons, strand):
     Returns:
         str: mRNA sequence.
     """
-    sequences = parse_fasta(reference_file) # Parse "Reference genome" (Calls
+    sequences = parse_fasta(reference_file) # Parse "Reference_genome" (Calls
     # parse_fasta function)
     if chrom not in sequences:
         raise ValueError(f"Chromosome {chrom} not found in the reference "
@@ -181,7 +181,7 @@ def main():
         # files
         for transcript_id, data in transcripts.items():
             chrom, strand, exons = data["chrom"], data["strand"], data["exons"]
-            dna_sequence = extract_exon_sequences(reference_genome_file,
+            dna_sequence = extract_variant_sequences(reference_genome_file,
                                                   chrom, exons, strand)
             # Call extract_exon_sequences function
 
