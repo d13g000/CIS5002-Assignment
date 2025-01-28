@@ -4,7 +4,7 @@ import os
 script_dir = os.path.dirname(os.path.abspath(__file__))
 task_2_dir = os.path.join(script_dir, "Task 2")
 
-reference_genome_file = os.path.join(task_2_dir, "Reference genome.fna")
+reference_genome_file = os.path.join(task_2_dir, "Reference_genome.fna")
 annotations_file = os.path.join(task_2_dir, "Annotations.gtf")
 gene_sequence_file = os.path.join(task_2_dir, "2b_HFE_gene.fasta") # File path
 # for gene sequence generated in script for Task 2b
