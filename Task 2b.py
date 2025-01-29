@@ -155,7 +155,8 @@ def main():
             f.write(hfe_sequence.strip() + "\n") # Write extracted gene
             # sequence
 
-        print(f"HFE gene sequence successfully saved to {output}") # Print
+        print(f"HFE gene sequence successfully extracted and saved to"
+              f" {output}") # Print
         # "output" file location
 
     except Exception as e:
