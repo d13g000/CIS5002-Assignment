@@ -54,7 +54,7 @@ def import_sql_file(sql_file):
             print(f"SQL file not found: {sql_file}") # Notify if file is missing
             return # Exit function
 
-        with open(sql_file, 'r') as file: # Open SQL file for reading ("r")
+        with open(sql_file, "r") as file: # Open SQL file for reading ("r")
             sql_script = file.read() # Read file content
 
         # Parse and split SQL commands using sqlparse
@@ -68,7 +68,7 @@ def import_sql_file(sql_file):
                     print(f"Error executing statement:\n{statement}\n{e}")
                     # Print statement raising execution error
         conn.commit() # Commit changes to database
-        print(f"SQL file '{sql_file}' imported successfully.") # Print
+        print(f"SQL file {sql_file} imported successfully.") # Print
         # notification of successful import of SQL file onto MariaDB
 
 
