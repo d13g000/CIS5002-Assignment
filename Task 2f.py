@@ -57,7 +57,7 @@ def extract_variant_details(columns):
 def main():
     try:
         # Step 1: a) Open and read all lines from "Clinvar.txt" file
-        with open(clinvar_file, 'r') as file:
+        with open(clinvar_file, "r") as file:
             lines = file.readlines()
 
 
@@ -68,7 +68,8 @@ def main():
         for line in lines:
             columns = line.strip().split("\t")  # Split line into columns by
             # tab
-            if len(columns) > 15 and 'HFE' in columns[1] and 'Pathogenic' in columns[15]:
+            if len(columns) > 15 and 'HFE' in columns[1] and 'Pathogenic' in\
+                columns[15]:
                 hfe_variants.append(columns)  # Append pathogenic variants
                 # for HFE only to the list
 
