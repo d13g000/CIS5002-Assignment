@@ -36,7 +36,7 @@ def download_sequences():
         response = requests.get(url) # Fetch sequence data from URL
         if response.status_code == 200: # Check if request is successful
             file_path = os.path.join (sequences_dir,
-                        f"1a_{species_name.replace(' ', '_')}.fasta")
+                        f"1a_{species_name.replace(" ", "_")}.fasta")
             # Set file path and name within which to save sequence
             with open(file_path, "w") as file: # Open file for writing "w"
                 file.write(response.text) # Write and save fetched sequence
@@ -73,7 +73,7 @@ def combine_fasta_files(output_file):
         # sequences) for writing "w"
         for species_name in species.keys(): # Iterate through species
             infile_path = os.path.join(sequences_dir,
-                        f"1a_{species_name.replace(' ', '_')}.fasta")
+                        f"1a_{species_name.replace(" ", "_")}.fasta")
             with open(infile_path, "r") as infile: # Open input file (species
                 # sequences) for reading "r"
                 outfile.write(infile.read()) # Write each record into
