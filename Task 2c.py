@@ -114,7 +114,7 @@ def parse_gtf_for_transcripts(gtf_file, gene_id):
             chrom, feature, start, end, strand, attributes = fields[0
             ], fields[2], int(fields[3]), int(fields[4]), fields[6], fields[
                 8] # Extract relevant fields
-            if feature == "exon" and f"GeneID:{gene_id}" in attributes: #
+            if feature == "exon" and f"GeneID:{gene_id}" in attributes:
                 # Check for exons of target gene
                 transcript_id = None
                 for attr in attributes.split(";"): # Extract transcript ID
@@ -148,7 +148,7 @@ def extract_variant_sequences(reference_file, chrom, exons, strand):
     Returns:
         str: mRNA sequence.
     """
-    sequences = parse_fasta(reference_file) # Parse "Reference_genome" (Calls
+    sequences = parse_fasta(reference_file) # Parse "Reference_genome" (Call
     # parse_fasta function)
     if chrom not in sequences:
         raise ValueError(f"Chromosome {chrom} not found in the reference "
