@@ -41,11 +41,11 @@ def download_sequences():
             with open(file_path, "w") as file: # Open file for writing "w"
                 file.write(response.text) # Write and save fetched sequence
                 # into file
-            print(f"Successfully downloaded: {species_name}") # Print
-            # notification of success
+            print(f"Successfully downloaded and saved {species_name} "
+                  f"sequence to {file_path}") # Print notification of success
         else:
-            print(f"Failed to download sequence for {species_name}.") # Print
-            # notification of failure
+            print(f"Failed to download and save sequence for"
+                  f" {species_name}.") # Print notification of failure
 
 
 def add_empty_line(file_path):
