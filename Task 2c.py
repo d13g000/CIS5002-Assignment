@@ -81,7 +81,7 @@ def convert_gene_to_mrna(hfe_gene_file, output_file):
             # for writing
             f.write(f">{seq_id}\n") # Write header including sequence ID
             f.write(mrna_sequence + "\n") # Write transcribed mRNA sequence
-    print(f"Converted HFE gene sequence to mRNA successfully and saved to"
+    print(f"Successfully converted HFE gene sequence to mRNA and saved to"
           f" {output_file}") # Print to notify successful transcription and
     # "output" file location
 
@@ -199,7 +199,7 @@ def main():
                 f.write(mrna_sequence.strip() + "\n") # Write extracted mRNA
                 # sequence
 
-            print(f"Successfully saved mRNA sequence for transcript"
+            print(f"Successfully extracted saved mRNA sequence for transcript"
                   f" {transcript_id} to {output_file}") # Print "output_file"
             # file location
 
