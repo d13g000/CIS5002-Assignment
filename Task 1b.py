@@ -18,7 +18,7 @@ sql_file_path = os.path.join(task_1_dir, "go-dump.sql") # Path and name of
 # SQL file
 
 
-def create_database_if_absent(db_name):
+def create_database(db_name):
     """
     Create MariaDB database to store SQL file if absent.
 
@@ -75,7 +75,7 @@ def import_sql_file(sql_file):
 def main():
     try:
         # Step 1: Create MariaDB database if absent
-        create_database_if_absent(db_config["database"]) # Call
+        create_database(db_config["database"]) # Call
         # create_database_if_absent function
 
         # Step 2: Import "go-dump.sql" SQL file into database
