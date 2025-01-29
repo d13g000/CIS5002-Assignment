@@ -11,22 +11,22 @@ output = os.path.join(task_2_dir, "2d_HFE_protein_reading_frames")
 
 # Translation table
 translation_table = {
-    'UUU': 'F', 'UUC': 'F', 'UUA': 'L', 'UUG': 'L',
-    'UCU': 'S', 'UCC': 'S', 'UCA': 'S', 'UCG': 'S',
-    'UAU': 'Y', 'UAC': 'Y', 'UAA': '*', 'UAG': '*',
-    'UGU': 'C', 'UGC': 'C', 'UGA': '*', 'UGG': 'W',
-    'CUU': 'L', 'CUC': 'L', 'CUA': 'L', 'CUG': 'L',
-    'CCU': 'P', 'CCC': 'P', 'CCA': 'P', 'CCG': 'P',
-    'CAU': 'H', 'CAC': 'H', 'CAA': 'Q', 'CAG': 'Q',
-    'CGU': 'R', 'CGC': 'R', 'CGA': 'R', 'CGG': 'R',
-    'AUU': 'I', 'AUC': 'I', 'AUA': 'I', 'AUG': 'M',
-    'ACU': 'T', 'ACC': 'T', 'ACA': 'T', 'ACG': 'T',
-    'AAU': 'N', 'AAC': 'N', 'AAA': 'K', 'AAG': 'K',
-    'AGU': 'S', 'AGC': 'S', 'AGA': 'R', 'AGG': 'R',
-    'GUU': 'V', 'GUC': 'V', 'GUA': 'V', 'GUG': 'V',
-    'GCU': 'A', 'GCC': 'A', 'GCA': 'A', 'GCG': 'A',
-    'GAU': 'D', 'GAC': 'D', 'GAA': 'E', 'GAG': 'E',
-    'GGU': 'G', 'GGC': 'G', 'GGA': 'G', 'GGG': 'G',
+    "UUU": "F", "UUC": "F", "UUA": "L", "UUG": "L",
+    "UCU": "S", "UCC": "S", "UCA": "S", "UCG": "S",
+    "UAU": "Y", "UAC": "Y", "UAA": "*", "UAG": "*",
+    "UGU": "C", "UGC": "C", "UGA": "*", "UGG": "W",
+    "CUU": "L", "CUC": "L", "CUA": "L", "CUG": "L",
+    "CCU": "P", "CCC": "P", "CCA": "P", "CCG": "P",
+    "CAU": "H", "CAC": "H", "CAA": "Q", "CAG": "Q",
+    "CGU": "R", "CGC": "R", "CGA": "R", "CGG": "R",
+    "AUU": "I", "AUC": "I", "AUA": "I", "AUG": "M",
+    "ACU": "T", "ACC": "T", "ACA": "T", "ACG": "T",
+    "AAU": "N", "AAC": "N", "AAA": "K", "AAG": "K",
+    "AGU": "S", "AGC": "S", "AGA": "R", "AGG": "R",
+    "GUU": "V", "GUC": "V", "GUA": "V", "GUG": "V",
+    "GCU": "A", "GCC": "A", "GCA": "A", "GCG": "A",
+    "GAU": "D", "GAC": "D", "GAA": "E", "GAG": "E",
+    "GGU": "G", "GGC": "G", "GGA": "G", "GGG": "G"
 }  # Dictionary mapping mRNA codons to their corresponding amino acids
 
 
@@ -44,7 +44,7 @@ def translate_sequence(sequence):
     for i in range(0, len(sequence) - 2, 3):  # Iterate over mRNA sequence in
         # codons (triplets)
         codon = sequence[i:i + 3]  # Extract codon (3 nucleotides)
-        amino_acid = translation_table.get(codon, '')  # Get corresponding
+        amino_acid = translation_table.get(codon, "")  # Get corresponding
         # amino acid for extracted codon
         if amino_acid:  # Skip invalid codons
             protein.append(amino_acid)  # Add amino acid to protein sequence
@@ -103,19 +103,19 @@ def translate_mrna(mrna_sequence):
 def find_orf_sequence(protein_sequence):
     """
     Extracts open reading frame (ORF) from protein sequence where ORF starts
-    with 'M' (methionine) and ends at the first '*' (stop codon).
+    with first "M" (methionine) and ends at the first "*" (stop codon).
 
     Args:
         protein_sequence (str): Protein sequence.
 
     Returns:
-        str: ORF sequence (from 'M' to the first amino acid before '*').
+        str: ORF sequence (from "M" to the first amino acid before "*").
     """
-    start_index = protein_sequence.find('M')  # Find first 'M' (start codon)
+    start_index = protein_sequence.find("M")  # Find first "M" (start codon)
     if start_index == -1:  # No start codon found
         return ""  # Return empty string
 
-    stop_index = protein_sequence.find('*', start_index)  # Find first '*'
+    stop_index = protein_sequence.find("*", start_index)  # Find first "*"
     # (stop codon) after first start codon
     if stop_index == -1:  # No stop codon found
         return protein_sequence[start_index:]  # Return protein sequence from
@@ -151,7 +151,7 @@ def find_orfs(protein_sequences):
     # frame
 
 
-def translate_mrna_to_orf(mrna_file, output_folder):
+def translate_mrna_find_orf(mrna_file, output_folder):
     """
     Translates mRNA sequence for all six frames and finds ORF.
 
@@ -220,7 +220,7 @@ def translate_mrna_to_orf(mrna_file, output_folder):
 
 def main():
     # Step 1: Translate mRNA to protein and find ORF
-    translate_mrna_to_orf(mrna_file, output)  # Call translate_mrna_to_orf
+    translate_mrna_find_orf(mrna_file, output)  # Call translate_mrna_find_orf
     # function
 
 
