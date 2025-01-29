@@ -183,7 +183,7 @@ def main():
             chrom, strand, exons = data["chrom"], data["strand"], data["exons"]
             dna_sequence = extract_variant_sequences(reference_genome_file,
                                                   chrom, exons, strand)
-            # Call extract_exon_sequences function
+            # Call extract_variant_sequences function
 
             # b) Transcribe DNA to mRNA
             mrna_sequence = transcribe_to_mrna(dna_sequence) # Call
