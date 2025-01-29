@@ -47,8 +47,8 @@ def extract_genomic_location(gtf_file, gene_id, transcript_id):
             attributes = fields[8] # Extract attributes field (9th column)
 
             # Filter for specific GeneID and TranscriptID
-            if f"GeneID:{gene_id}" in attributes and f'transcript_id "{
-            transcript_id}"' in attributes: # Check if GeneID and
+            if f"GeneID:{gene_id}" in attributes and f"transcript_id {
+            transcript_id}" in attributes: # Check if GeneID and
                 # TranscriptID match desired values
                 # Extract location details
                 chrom = fields[0] # Chromosome number
