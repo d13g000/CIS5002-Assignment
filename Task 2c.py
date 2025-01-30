@@ -77,6 +77,8 @@ def convert_gene_to_mrna(hfe_gene_file, output_file):
     for seq_id, dna_sequence in sequences.items(): # Iterate over each sequence
         mrna_sequence = transcribe_to_mrna(dna_sequence) # Transcribe DNA to
         # mRNA (Call transcribe_to_mrna function)
+        print("Transcribed HFE gene sequence:")
+        print(mrna_sequence) # Print transcribed sequence
         with open(output_file, "w") as f: # Open "2c_HFE_mrna_variants" file
             # for writing
             f.write(f">{seq_id}\n") # Write header including sequence ID
@@ -174,7 +176,7 @@ def main():
         # Step 2: Parse "Annotations" GTF file to determine transcript variants
         transcripts = parse_gtf_for_transcripts(annotations_file, gene_id)
         # Call parse_gtf_for_transcripts function
-        print(f"Found {len(transcripts)} transcript variants for GeneID "
+        print(f"\nFound {len(transcripts)} transcript variants for GeneID "
               f"{gene_id}.") # Print number of transcripts found
 
         # Step 3: a) Extract transcript sequences and saves them into FASTA
