@@ -184,8 +184,9 @@ def translate_mrna_find_orf(mrna_file, output_folder):
 
         print(f"The ORF is found in Frame {longest_frame}")  # Print frame
         # belonging to ORF
-        print(f"ORF Protein Sequence ({len(longest_orf)} aa): {longest_orf}")
+        print(f"ORF sequence ({len(longest_orf)} aa): {longest_orf}")
         # Print ORF sequence and length in amino acids
+        print()
 
         # Create "2d_HFE_protein_reading_frames" output folder if not present
         os.makedirs(output_folder, exist_ok=True)
@@ -212,7 +213,7 @@ def translate_mrna_find_orf(mrna_file, output_folder):
             # Write header including extracted FASTA file header and ORF frame
             # number
             f.write(longest_orf + "\n")  # Write ORF sequence
-        print(f"ORF sequence successfully saved to {orf_output_file}")
+        print(f"\nORF sequence successfully saved to {orf_output_file}")
 
     except Exception as e:
         print(f"Error in translation: {e}")
