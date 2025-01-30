@@ -117,7 +117,8 @@ def compare_sequences(hfe_sequence, refseq_sequence, output_file):
 
     with open(output_file, "r") as output:
         print("Protein sequence comparison result:")
-        print(output.read()) # Print file contents (comparison result)
+        print(output.read())
+        # Print file contents (comparison result)
 
 def main():
     try:
