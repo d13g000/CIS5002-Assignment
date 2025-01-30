@@ -1,6 +1,12 @@
 # CIS5002-Assignment
 CIS5002 Assignment
+To run this project, the entire folder ("202425_CIS5002_AGIUS_DIEGO_168499M_assignment_code") must be downloaded from the University of Malta Google Drive and executed as is. 
+Each script within the folder relies on the existing directory structure, including specific file names and locations, to function correctly.
+Modifying the folder structure or renaming files may result in errors, as the scripts reference predefined paths using the OS library. 
+If you wish to use your own files, ensure that the new files are placed within the same directory structure and named exactly as referenced in the scripts. Alternatively, you may modify the scripts accordingly to accommodate different file names or locations. 
 
+
+---
 1a) Download species sequences and MSA
 This Python script automates the process of downloading protein sequences from UniProt, preparing them for analysis, and performing multiple sequence alignments using Clustal Omega ("clustalo") and MAFFT. 
 The script is designed to handle sequences from multiple species and outputs the aligned sequences into specified files ("1a_{tool}_alignment.fasta").
@@ -29,10 +35,11 @@ The script is designed to handle sequences from multiple species and outputs the
  - NONE (script uses defined species and corresponding accession number dictionary)
 
 --> Output files:
- - 1a_{tool}_alignment.fasta (FASTA files corresponding to Clustal Omega and MAFFT alignment results)
- - The following files and directory structure:
-   - Species sequences (folder/directory containing downloaded sequences)
-     - 1a_{species_name}.fasta (FASTA files containing sequence from specific species)
+ - Within Task 1 directory:
+   - 1a_{tool}_alignment.fasta (FASTA files corresponding to Clustal Omega and MAFFT alignment results)
+   - The following files and directory structure:
+     - Species sequences (folder/directory containing downloaded sequences)
+       - 1a_{species_name}.fasta (FASTA files containing sequence from specific species)
  
 
 ---
@@ -101,9 +108,10 @@ It identifies the gene's location using its GeneID and Transcript ID, retrieves 
  - Annotations ("Annotations.gtf") https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001405.40/
 
 --> Output files:
- - 2b_HFE_gene.fasta (FASTA file containing extracted HFE gene sequence)
-   - uppercase letters: regions where nucleotides are highly conserved
-   - lowercase letters: regions where nucleotides vary with most common nucleotide given in lowercase (soft-masked region) 
+ - Within Task 2 directory:
+   - 2b_HFE_gene.fasta (FASTA file containing extracted HFE gene sequence)
+     - uppercase letters: regions where nucleotides are highly conserved
+     - lowercase letters: regions where nucleotides vary with most common nucleotide given in lowercase (soft-masked region) 
 
 
 ---
@@ -131,12 +139,13 @@ Using the DNA sequence ("2b_HFE_gene.fasta") file, the script transcribes DNA to
  - HFE gene sequence ("2b_HFE_gene.fasta")
 
 --> Output files:
- - 2c_HFE_gene_mRNA.fasta (FASTA file containing transcribed HFE mRNA sequence)
-   - uppercase letters: regions where nucleotides are highly conserved
-   - lowercase letters: regions where nucleotides vary with most common nucleotide given in lowercase (soft-masked region)
- - The following files and directory structure:
-   - 2c_HFE_mRNA_variants (folder/directory containing extracted HFE mRNA variants)
-     - 2c_{HFE transcript ID}_mRNA.fasta (FASTA file containing transcribed HFE variants mRNA sequence)
+ - Within Task 2 directory:
+   - 2c_HFE_gene_mRNA.fasta (FASTA file containing transcribed HFE mRNA sequence)
+     - uppercase letters: regions where nucleotides are highly conserved
+     - lowercase letters: regions where nucleotides vary with most common nucleotide given in lowercase (soft-masked region)
+   - The following files and directory structure:
+     - 2c_HFE_mRNA_variants (folder/directory containing extracted HFE mRNA variants)
+       - 2c_{HFE transcript ID}_mRNA.fasta (FASTA file containing transcribed HFE variants mRNA sequence)
 
 
 ---
@@ -158,12 +167,13 @@ It also determines the open reading frame (ORF) and saves it to an individual FA
  - HFE mRNA sequence ("2c_HFE_gene_mrna.fasta")
 
 --> Output files:
- - The following files and directory structure:
-   - 2d_HFE_protein_reading_frames.fasta (folder/directory containing HFE reading frames and ORF)
-     - 2d_HFE_ORF_sequence.fasta (FASTA file containing HFE ORF sequence)
-     - 2d_HFE_protein_reading_frame_{frame}.fasta (FASTA file containing translated HFE reading frame)
-       - letters: amino acids
-       - *: stop codons
+ - Within Task 2 directory:
+   - The following files and directory structure:
+     - 2d_HFE_protein_reading_frames.fasta (folder/directory containing HFE reading frames and ORF)
+       - 2d_HFE_ORF_sequence.fasta (FASTA file containing HFE ORF sequence)
+       - 2d_HFE_protein_reading_frame_{frame}.fasta (FASTA file containing translated HFE reading frame)
+         - letters: amino acids
+         - *: stop codons
 
 
 ---
@@ -189,7 +199,8 @@ The script also identifies any differences between the two sequences and outputs
  - HFE ORF sequence ("2d_HFE_ORF_sequence.fasta")
 
 --> Output files:
- - 2e_HFE_protein_comparison.txt (text file containing the comparison results, including position-wise differences and extra residues if either of the sequences is longer)
+ - Within Task 2 directory:
+   - 2e_HFE_protein_comparison.txt (text file containing the comparison results, including position-wise differences and extra residues if either of the sequences is longer)
 
 
 ---
@@ -218,4 +229,5 @@ The script also provides detailed insights into the extracted variants by printi
  - ClinVar ("Clinvar.txt") https://www.ncbi.nlm.nih.gov/clinvar/?term=%22hfe%22%5BGENE%5D&redir=gene
 
 --> Output files:
- - 2f_HFE_pathogenic_variants.csv (CSV file containing the columns for variant, gene (protein change), type (consequence), condition and, classification)
+ - Within Task 2 directory:
+   - 2f_HFE_pathogenic_variants.csv (CSV file containing the columns for variant, gene (protein change), type (consequence), condition and, classification)
