@@ -135,9 +135,8 @@ def main():
         # location details (chromosome number, start and end locations and,
         # strand)
 
-        # Step 2: Extract sequence from reference genome using
-        # "Reference_genome" file and location details extracted when calling
-        # extract_genomic_location function
+        # Step 2: Extract and print location details and sequence returned
+        # when calling extract_genomic_location using "Reference_genome" file
         hfe_sequence = extract_sequence(
             reference_genome_file,
             gene_location["chrom"],
@@ -145,6 +144,9 @@ def main():
             gene_location["end"],
             gene_location["strand"],
         ) # Call extract_sequence function
+
+        print(f"\nExtracted HFE gene sequence:")
+        print(hfe_sequence) # Print extracted gene sequence
 
         # Step 3: Write extracted sequence into file
         with open(output, "w") as f: # Open "output" file
@@ -155,7 +157,7 @@ def main():
             f.write(hfe_sequence.strip() + "\n") # Write extracted gene
             # sequence
 
-        print(f"HFE gene sequence successfully extracted and saved to"
+        print(f"\nHFE gene sequence successfully extracted and saved to"
               f" {output}") # Print
         # "output" file location
 
