@@ -106,14 +106,18 @@ def compare_sequences(hfe_sequence, refseq_sequence, output_file):
                     # position are different
             # Handle length differences
             if len(hfe_sequence) > len(refseq_sequence):
-                output.write(f"HFE ORF sequence is longer. Extra residues: "
+                output.write(f"\nHFE ORF sequence is longer. Extra residues: "
                              f"{hfe_sequence[len(refseq_sequence):]}\n")
                 # Write extra residues in the HFE sequence if it is longer
             elif len(refseq_sequence) > len(hfe_sequence):
-                output.write(f"HFE RefSeq sequence is longer. Extra residues: "
-                             f"{refseq_sequence[len(hfe_sequence):]}\n")
+                output.write(f"\nHFE RefSeq sequence is longer. Extra "
+                             f"residues:"
+                             f" {refseq_sequence[len(hfe_sequence):]}\n")
                 # Write extra residues in the RefSeq sequence if it is longer
 
+    with open(output_file, "r") as output:
+        print("Protein sequence comparison result:")
+        print(output.read()) # Print file contents (comparison result)
 
 def main():
     try:
