@@ -17,9 +17,6 @@ The script is designed to handle sequences from multiple species and outputs the
  - Performs multiple sequence alignment using Clustal Omega and MAFFT and saves the aligned sequences in separate output files.
 
 --> Prerequisites:
- - Biopython (Library to parse and handle biological data) 
-   - Linux download: pip install biopython / conda install biopython
-   - iOS download: brew install biopython / conda install biopython
  - Requests (Library to facilitate HTTP requests and fetching data)
    - Linux download: pip install requests / conda install requests
    - iOS download: brew install requests / conda install requests
